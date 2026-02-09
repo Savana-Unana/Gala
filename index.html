@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Black Tie Gala — Game Directory</title>
+    <style>
+      :root {
+        --bg-1: #0b0d12;
+        --bg-2: #161b24;
+        --bg-3: #0f141c;
+        --gold-1: #f6d67b;
+        --gold-2: #c9a44d;
+        --ink: #e9eef6;
+        --muted: #a6b3c6;
+        --card: rgba(17, 20, 28, 0.85);
+        --stroke: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype",
+          "Book Antiqua", "Times New Roman", serif;
+        background:
+          radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        min-height: 100vh;
+      }
+
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px 60px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      header h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: 0.04em;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.95rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      a.button {
+        text-decoration: none;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Black Tie Gala — Game Directory</h1>
+        <p>Select a challenge screen. Host and Audience are separate.</p>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Spot The Difference</h2>
+          <p>Host and audience view with shared progress bar.</p>
+          <div class="actions">
+            <a class="button" href="spothost.html">Host Screen</a>
+            <a class="button" href="spotaudience.html">Audience Screen</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Hangman</h2>
+          <p>Wheel-of-fortune style board + shared score bar.</p>
+          <div class="actions">
+            <a class="button" href="hangman_host.html">Host Screen</a>
+            <a class="button" href="hangman_audience.html">Audience Screen</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Word Ladder</h2>
+          <p>Coming next. Audience submits next word.</p>
+          <div class="muted">Not configured yet.</div>
+        </article>
+
+        <article class="card">
+          <h2>Final Round</h2>
+          <p>Coming next. Audience votes on the grand prize.</p>
+          <div class="muted">Not configured yet.</div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

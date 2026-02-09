@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Black Tie Gala — Audience Spot The Difference</title>
+    <script>
+      window.FIREBASE_CONFIG = {
+        apiKey: "",
+        authDomain: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+      };
+      window.EVENT_ID = "black-tie-gala-2026-02-09";
+      window.SPOT_IMAGE_LEFT = "";
+      window.SPOT_IMAGE_RIGHT = "";
+    </script>
+    <style>
+      :root {
+        --bg-1: #0b0d12;
+        --bg-2: #161b24;
+        --bg-3: #0f141c;
+        --gold-1: #f6d67b;
+        --gold-2: #c9a44d;
+        --ink: #e9eef6;
+        --muted: #a6b3c6;
+        --host: #ff8a5b;
+        --aud: #5fd6a6;
+        --card: rgba(17, 20, 28, 0.85);
+        --stroke: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype",
+          "Book Antiqua", "Times New Roman", serif;
+        background:
+          radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        min-height: 100vh;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 18px 40px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+
+      header h1 {
+        margin: 0 0 6px;
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        letter-spacing: 0.04em;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.95rem;
+      }
+
+      .glass {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+        backdrop-filter: blur(10px);
+      }
+
+      .bar {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .track {
+        position: relative;
+        height: 16px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .meter {
+        position: absolute;
+        inset: 0;
+        width: 0%;
+      }
+
+      .meter.host {
+        background: linear-gradient(120deg, var(--host), #ffb18b);
+      }
+
+      .meter.aud {
+        background: linear-gradient(120deg, var(--aud), #93e7c4);
+        mix-blend-mode: screen;
+      }
+
+      .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .image-wrap {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--stroke);
+        min-height: 200px;
+        background: rgba(255, 255, 255, 0.02);
+        touch-action: manipulation;
+      }
+
+      .image-wrap img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .dot {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        border: 2px solid var(--gold-1);
+        box-shadow: 0 0 10px rgba(246, 214, 123, 0.5);
+        transform: translate(-50%, -50%);
+      }
+
+      .dot.host {
+        border-color: var(--host);
+        box-shadow: 0 0 10px rgba(255, 138, 91, 0.5);
+      }
+
+      .dot.aud {
+        border-color: var(--aud);
+        box-shadow: 0 0 10px rgba(95, 214, 166, 0.5);
+      }
+
+      .hint {
+        margin-top: 12px;
+        text-align: center;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Spot The Difference</h1>
+        <p>Tap where you see a difference. Your spot counts toward the audience score.</p>
+      </header>
+
+      <section class="bar glass">
+        <div class="bar-labels">
+          <span>Contestants: <strong id="host-score">0%</strong></span>
+          <span>Audience: <strong id="aud-score">0%</strong></span>
+        </div>
+        <div class="track">
+          <div class="meter host" id="host-meter"></div>
+          <div class="meter aud" id="aud-meter"></div>
+        </div>
+      </section>
+
+      <section class="board">
+        <div class="image-wrap glass" id="tap-left">
+          <img id="image-left" alt="Left image" />
+          <div class="overlay" id="overlay-left"></div>
+        </div>
+        <div class="image-wrap glass" id="tap-right">
+          <img id="image-right" alt="Right image" />
+          <div class="overlay" id="overlay-right"></div>
+        </div>
+      </section>
+
+      <div class="hint">
+        Tip: Tap lightly. Each tap counts once and adds to the audience meter.
+      </div>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        onSnapshot,
+        collection,
+        addDoc,
+        serverTimestamp,
+        runTransaction,
+      } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+      const firebaseConfig = window.FIREBASE_CONFIG || null;
+      const eventId = window.EVENT_ID || "black-tie-gala";
+
+      const imgLeft = document.getElementById("image-left");
+      const imgRight = document.getElementById("image-right");
+      imgLeft.src = window.SPOT_IMAGE_LEFT || "";
+      imgRight.src = window.SPOT_IMAGE_RIGHT || "";
+
+      const overlayLeft = document.getElementById("overlay-left");
+      const overlayRight = document.getElementById("overlay-right");
+
+      const hostMeter = document.getElementById("host-meter");
+      const audMeter = document.getElementById("aud-meter");
+      const hostScore = document.getElementById("host-score");
+      const audScore = document.getElementById("aud-score");
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const stateRef = doc(db, "events", eventId, "spot", "state");
+      const hostMarksRef = collection(db, "events", eventId, "spot", "host_marks");
+      const audienceMarksRef = collection(
+        db,
+        "events",
+        eventId,
+        "spot",
+        "audience_marks"
+      );
+
+      await setDoc(
+        stateRef,
+        {
+          totalDifferences: 7,
+          hostFound: 0,
+          audienceFound: 0,
+        },
+        { merge: true }
+      );
+
+      const renderDot = (overlay, x, y, cls) => {
+        const dot = document.createElement("div");
+        dot.className = `dot ${cls}`;
+        dot.style.left = `${x * 100}%`;
+        dot.style.top = `${y * 100}%`;
+        overlay.appendChild(dot);
+      };
+
+      const hostDots = new Set();
+      const audienceDots = new Set();
+
+      onSnapshot(hostMarksRef, (snap) => {
+        snap.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const { x, y } = change.doc.data();
+            const key = change.doc.id;
+            if (hostDots.has(key)) return;
+            hostDots.add(key);
+            renderDot(overlayLeft, x, y, "host");
+            renderDot(overlayRight, x, y, "host");
+          }
+        });
+      });
+
+      onSnapshot(audienceMarksRef, (snap) => {
+        snap.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            const { x, y } = change.doc.data();
+            const key = change.doc.id;
+            if (audienceDots.has(key)) return;
+            audienceDots.add(key);
+            renderDot(overlayLeft, x, y, "aud");
+            renderDot(overlayRight, x, y, "aud");
+          }
+        });
+      });
+
+      onSnapshot(stateRef, (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        const totalDifferences = data.totalDifferences || 7;
+        const hostPct = Math.min(100, Math.round((data.hostFound / totalDifferences) * 100));
+        const audPct = Math.min(100, Math.round(data.audienceFound || 0));
+        hostMeter.style.width = `${hostPct}%`;
+        audMeter.style.width = `${audPct}%`;
+        hostScore.textContent = `${hostPct}%`;
+        audScore.textContent = `${audPct}%`;
+      });
+
+      const handleTap = async (event) => {
+        const target = event.currentTarget;
+        const rect = target.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+
+        await addDoc(audienceMarksRef, {
+          x,
+          y,
+          createdAt: serverTimestamp(),
+        });
+
+        await runTransaction(db, async (tx) => {
+          const stateSnap = await tx.get(stateRef);
+          const data = stateSnap.data() || {};
+          const current = data.audienceFound || 0;
+          const next = Math.min(100, current + 1);
+          tx.set(stateRef, { audienceFound: next }, { merge: true });
+        });
+      };
+
+      document.getElementById("tap-left").addEventListener("click", handleTap);
+      document.getElementById("tap-right").addEventListener("click", handleTap);
+    </script>
+  </body>
+</html>
