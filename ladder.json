@@ -1,0 +1,24 @@
+{
+  "audience": [
+    {
+      "start": "COLD",
+      "end": "WARM",
+      "steps": [
+        { "word": "CORD", "hint": "Change last letter" },
+        { "word": "CARD", "hint": "Change second letter" },
+        { "word": "WARD", "hint": "Change first letter" },
+        { "word": "WARM", "hint": "Change last letter" }
+      ]
+    }
+  ],
+  "host": [
+    {
+      "start": "GALA",
+      "end": "GOLD",
+      "steps": [
+        { "word": "GALL", "hint": "Swap one letter" },
+        { "word": "GOLD", "hint": "Swap one letter" }
+      ]
+    }
+  ]
+}

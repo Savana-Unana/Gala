@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Black Tie Gala - Wordle</title>
+    <script>
+      window.FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCcR537OUiw_M9iy29em6kBGfn-z7Tf7-8",
+        authDomain: "gala-99db5.firebaseapp.com",
+        projectId: "gala-99db5",
+        storageBucket: "gala-99db5.firebasestorage.app",
+        messagingSenderId: "75610830408",
+        appId: "1:75610830408:web:111f50ea866528ac5a8a7d",
+        measurementId: "G-7P75W73C4B",
+      };
+      window.EVENT_ID = "black-tie-gala-2026-02-09";
+    </script>
+    <style>
+      :root {
+        --bg-1: #0b0d12;
+        --bg-2: #161b24;
+        --bg-3: #0f141c;
+        --gold-1: #f6d67b;
+        --gold-2: #c9a44d;
+        --ink: #e9eef6;
+        --muted: #a6b3c6;
+        --host: #ff8a5b;
+        --aud: #5fd6a6;
+        --card: rgba(17, 20, 28, 0.85);
+        --stroke: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype",
+          "Book Antiqua", "Times New Roman", serif;
+        background:
+          radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        min-height: 100vh;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 26px 18px 40px;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        letter-spacing: 0.04em;
+      }
+
+      .timer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .timer-display {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      button.action {
+        border: none;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        cursor: pointer;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+        box-shadow: 0 10px 20px rgba(201, 164, 77, 0.35);
+      }
+
+      button.muted {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--ink);
+        box-shadow: none;
+        border: 1px solid var(--stroke);
+      }
+
+      .glass {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+        backdrop-filter: blur(10px);
+      }
+
+      .bar {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .track {
+        position: relative;
+        height: 16px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .meter {
+        position: absolute;
+        inset: 0;
+        width: 0%;
+      }
+
+      .meter.host {
+        background: linear-gradient(120deg, var(--host), #ffb18b);
+      }
+
+      .meter.aud {
+        background: linear-gradient(120deg, var(--aud), #93e7c4);
+        mix-blend-mode: screen;
+      }
+
+      .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .layout {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+      }
+
+      .panel {
+        display: grid;
+        gap: 12px;
+      }
+
+      .panel h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .panel p {
+        margin: 0;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.9rem;
+      }
+
+      .word-box {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .word-mask {
+        font-size: 1.3rem;
+        letter-spacing: 0.2em;
+      }
+
+      .guess-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .guess-row input {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--stroke);
+        background: rgba(0, 0, 0, 0.25);
+        color: var(--ink);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .guesses {
+        display: grid;
+        gap: 6px;
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.9rem;
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .counter span {
+        min-width: 40px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Wordle</h1>
+        <div class="timer">
+          <span class="timer-display" id="timer-display">02:00</span>
+          <button class="action" id="timer-start">Start</button>
+          <button class="action muted" id="timer-reset">Reset</button>
+        </div>
+      </header>
+
+      <section class="bar glass">
+        <div class="bar-labels">
+          <span>Contestants: <strong id="host-score">0</strong></span>
+          <span>Audience: <strong id="aud-score">0</strong></span>
+        </div>
+        <div class="track">
+          <div class="meter host" id="host-meter"></div>
+          <div class="meter aud" id="aud-meter"></div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="panel glass">
+          <div class="word-box">
+            <h2 id="role-label">Audience</h2>
+            <p>Target word length: <strong id="word-length">0</strong></p>
+            <div class="word-mask" id="word-mask">-----</div>
+            <div class="guess-row">
+              <input type="text" id="guess-input" placeholder="Type a guess" />
+              <button class="action" id="guess-submit">Submit</button>
+            </div>
+            <div class="guesses" id="guess-list"></div>
+          </div>
+        </div>
+        <aside class="panel glass">
+          <h2>Progress</h2>
+          <p>Letters found update with each guess.</p>
+          <div class="counter">
+            <button class="action muted" id="you-minus">-</button>
+            <span id="you-count">0</span>
+            <button class="action" id="you-plus">+</button>
+          </div>
+          <p>Other team progress (manual for now).</p>
+          <div class="counter">
+            <button class="action muted" id="other-minus">-</button>
+            <span id="other-count">0</span>
+            <button class="action" id="other-plus">+</button>
+          </div>
+          <div class="muted" id="letters-found">Letters found: 0</div>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        onSnapshot,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get("role") === "host" ? "host" : "audience";
+      const clientId = params.get("id") || role;
+      const firebaseConfig = window.FIREBASE_CONFIG || null;
+      const eventId = window.EVENT_ID || "black-tie-gala";
+
+      const totalTime = 120;
+      let remaining = totalTime;
+      let timerId = null;
+
+      const timerDisplay = document.getElementById("timer-display");
+      const startBtn = document.getElementById("timer-start");
+      const resetBtn = document.getElementById("timer-reset");
+
+      const hostMeter = document.getElementById("host-meter");
+      const audMeter = document.getElementById("aud-meter");
+      const hostScore = document.getElementById("host-score");
+      const audScore = document.getElementById("aud-score");
+
+      const roleLabel = document.getElementById("role-label");
+      const wordLengthEl = document.getElementById("word-length");
+      const wordMask = document.getElementById("word-mask");
+      const guessInput = document.getElementById("guess-input");
+      const guessSubmit = document.getElementById("guess-submit");
+      const guessList = document.getElementById("guess-list");
+
+      const youCountEl = document.getElementById("you-count");
+      const otherCountEl = document.getElementById("other-count");
+      const lettersFoundEl = document.getElementById("letters-found");
+
+      const stateKey = `wordle:${role}:${clientId}`;
+      const saved = JSON.parse(localStorage.getItem(stateKey) || "{}");
+
+      let targetWord = "";
+      let foundLetters = new Set(saved.foundLetters || []);
+      let guesses = saved.guesses || [];
+      let syncedProgress = { hostProgress: 0, audienceProgress: 0 };
+      let localOtherProgress = saved.otherProgress || 0;
+      let syncEnabled = false;
+      let gameStateRef = null;
+
+      roleLabel.textContent = role === "host" ? "Contestants" : "Audience";
+
+      const formatTime = (value) => {
+        const mins = Math.floor(value / 60);
+        const secs = value % 60;
+        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      };
+
+      const updateTimer = () => {
+        timerDisplay.textContent = formatTime(remaining);
+      };
+
+      const startTimer = () => {
+        if (timerId) return;
+        timerId = setInterval(() => {
+          remaining = Math.max(0, remaining - 1);
+          updateTimer();
+          if (remaining === 0) {
+            clearInterval(timerId);
+            timerId = null;
+          }
+        }, 1000);
+      };
+
+      const resetTimer = () => {
+        clearInterval(timerId);
+        timerId = null;
+        remaining = totalTime;
+        updateTimer();
+      };
+
+      startBtn.addEventListener("click", startTimer);
+      resetBtn.addEventListener("click", resetTimer);
+      updateTimer();
+
+      const saveState = () => {
+        localStorage.setItem(
+          stateKey,
+          JSON.stringify({
+            foundLetters: Array.from(foundLetters),
+            guesses,
+            word: targetWord,
+            otherProgress: localOtherProgress,
+          })
+        );
+      };
+
+      const getMyProgress = () => foundLetters.size;
+
+      const syncMyProgress = async () => {
+        if (!syncEnabled || !gameStateRef) return;
+        const field = role === "host" ? "hostProgress" : "audienceProgress";
+        try {
+          await setDoc(
+            gameStateRef,
+            {
+              [field]: getMyProgress(),
+              updatedAt: serverTimestamp(),
+            },
+            { merge: true }
+          );
+        } catch (err) {
+          console.warn("Wordle sync write failed.", err);
+        }
+      };
+
+      const updateOtherProgress = async (delta) => {
+        if (!syncEnabled || !gameStateRef) {
+          localOtherProgress = Math.max(0, localOtherProgress + delta);
+          saveState();
+          renderProgress();
+          return;
+        }
+        const field = role === "host" ? "audienceProgress" : "hostProgress";
+        const current = syncedProgress[field] || 0;
+        const next = Math.max(0, current + delta);
+        try {
+          await setDoc(
+            gameStateRef,
+            {
+              [field]: next,
+              updatedAt: serverTimestamp(),
+            },
+            { merge: true }
+          );
+        } catch (err) {
+          console.warn("Wordle sync write failed.", err);
+        }
+      };
+
+      const renderProgress = () => {
+        const totalLetters = targetWord.length || 1;
+        const youCount = getMyProgress();
+        const hostValue = syncEnabled
+          ? role === "host"
+            ? Math.max(syncedProgress.hostProgress || 0, youCount)
+            : syncedProgress.hostProgress || 0
+          : role === "host"
+            ? youCount
+            : localOtherProgress;
+        const audValue = syncEnabled
+          ? role === "audience"
+            ? Math.max(syncedProgress.audienceProgress || 0, youCount)
+            : syncedProgress.audienceProgress || 0
+          : role === "audience"
+            ? youCount
+            : localOtherProgress;
+        hostScore.textContent = hostValue;
+        audScore.textContent = audValue;
+        hostMeter.style.width = `${Math.min(100, (hostValue / totalLetters) * 100)}%`;
+        audMeter.style.width = `${Math.min(100, (audValue / totalLetters) * 100)}%`;
+        youCountEl.textContent = youCount;
+        otherCountEl.textContent = role === "host" ? audValue : hostValue;
+        lettersFoundEl.textContent = `Letters found: ${youCount}`;
+      };
+
+      const renderGuesses = () => {
+        guessList.innerHTML = "";
+        guesses.forEach((guess) => {
+          const row = document.createElement("div");
+          row.textContent = guess.toUpperCase();
+          guessList.appendChild(row);
+        });
+      };
+
+      const handleGuess = () => {
+        const guess = guessInput.value.trim().toLowerCase();
+        if (!guess) return;
+        guesses.unshift(guess);
+        guessInput.value = "";
+        for (const char of guess) {
+          if (targetWord.includes(char)) {
+            foundLetters.add(char);
+          }
+        }
+        saveState();
+        syncMyProgress();
+        renderGuesses();
+        renderProgress();
+      };
+
+      guessSubmit.addEventListener("click", handleGuess);
+      guessInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") handleGuess();
+      });
+
+      document.getElementById("you-plus").addEventListener("click", () => {
+        foundLetters.add(`x-${Date.now()}`);
+        saveState();
+        syncMyProgress();
+        renderProgress();
+      });
+
+      document.getElementById("you-minus").addEventListener("click", () => {
+        const items = Array.from(foundLetters);
+        if (items.length) {
+          foundLetters.delete(items[items.length - 1]);
+          saveState();
+          syncMyProgress();
+          renderProgress();
+        }
+      });
+
+      document.getElementById("other-plus").addEventListener("click", () => {
+        updateOtherProgress(1);
+      });
+
+      document.getElementById("other-minus").addEventListener("click", () => {
+        updateOtherProgress(-1);
+      });
+
+      const loadData = async () => {
+        try {
+          const res = await fetch("wordle.json");
+          const data = await res.json();
+          const list = data[role] || [];
+          targetWord = (list[0] || "").toLowerCase();
+        } catch (err) {
+          targetWord = "";
+        }
+        if (saved.word && saved.word !== targetWord) {
+          foundLetters = new Set();
+          guesses = [];
+          saveState();
+        }
+        const length = targetWord.length || 0;
+        wordLengthEl.textContent = String(length);
+        wordMask.textContent = length ? "•".repeat(length) : "-----";
+        renderGuesses();
+        renderProgress();
+        syncMyProgress();
+      };
+
+      const initSync = async () => {
+        try {
+          if (!firebaseConfig || !firebaseConfig.apiKey) {
+            throw new Error("Missing Firebase config");
+          }
+          const app = initializeApp(firebaseConfig);
+          const db = getFirestore(app);
+          gameStateRef = doc(db, "events", eventId, "gameState", "wordle");
+          await setDoc(
+            gameStateRef,
+            {
+              hostProgress: 0,
+              audienceProgress: 0,
+              updatedAt: serverTimestamp(),
+            },
+            { merge: true }
+          );
+          onSnapshot(gameStateRef, (snap) => {
+            if (!snap.exists()) return;
+            const data = snap.data() || {};
+            syncedProgress = {
+              hostProgress: Number(data.hostProgress || 0),
+              audienceProgress: Number(data.audienceProgress || 0),
+            };
+            renderProgress();
+          });
+          syncEnabled = true;
+          syncMyProgress();
+        } catch (err) {
+          console.warn("Wordle sync unavailable. Using local progress.", err);
+          syncEnabled = false;
+          renderProgress();
+        }
+      };
+
+      loadData();
+      initSync();
+    </script>
+  </body>
+</html>

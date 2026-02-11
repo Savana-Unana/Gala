@@ -1,0 +1,22 @@
+{
+  "audience": [
+    { "scramble": "SEGUT", "answer": "GUEST" },
+    { "scramble": "CLBKA", "answer": "BLACK" },
+    { "scramble": "EIT", "answer": "TIE" },
+    { "scramble": "LAGA", "answer": "GALA" },
+    { "scramble": "CUMSI", "answer": "MUSIC" },
+    { "scramble": "THIGN", "answer": "NIGHT" },
+    { "scramble": "CEDAN", "answer": "DANCE" },
+    { "scramble": "GATES", "answer": "STAGE" },
+    { "scramble": "EVOT", "answer": "VOTE" },
+    { "scramble": "RZPIE", "answer": "PRIZE" }
+  ],
+  "host": [
+    { "scramble": "EIT", "answer": "TIE" },
+    { "scramble": "LAGA", "answer": "GALA" },
+    { "scramble": "EVOT", "answer": "VOTE" },
+    { "scramble": "RZPIE", "answer": "PRIZE" },
+    { "scramble": "SERDS", "answer": "DRESS" },
+    { "scramble": "SHOT", "answer": "HOST" }
+  ]
+}
