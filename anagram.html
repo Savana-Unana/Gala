@@ -358,6 +358,7 @@
         }
         return Math.max(0, Math.ceil((Number(gameState.timerEndsAtMs || 0) - Date.now()) / 1000));
       };
+      const isRoundActive = () => !!gameState && gameState.timerStatus === "running" && getRemaining() > 0;
 
       const aggregate = () => {
         const active = participants.filter((p) => Number(p.resetToken || 0) === Number(gameState?.resetToken || 1));
@@ -393,14 +394,15 @@
         targetLine.textContent = `Audience target total: ${audienceTarget}`;
 
         let status = "Waiting for host.";
-        if (gameState.timerStatus === "running") status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() > 0) status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() <= 0) status = "Time is up. Waiting for host.";
         if (gameState.timerStatus === "ended") status = "Round ended.";
         if (contestantProgress >= contestantTotalWords) status = "Contestants finished all words.";
         if (audienceProgress >= audienceTarget) status = "Audience reached target.";
         statusLine.textContent = status;
 
         if (role !== "host") {
-          const enabled = gameState.timerStatus === "running";
+          const enabled = isRoundActive();
           listEl.querySelectorAll("input").forEach((input) => {
             input.disabled = !enabled;
           });
@@ -437,9 +439,10 @@
           input.name = `anagram-${idx}`;
           input.autocomplete = "off";
           input.value = answers[idx] || "";
-          input.disabled = !(gameState && gameState.timerStatus === "running");
+          input.disabled = !isRoundActive();
           if (solved[idx]) row.classList.add("solved");
           input.addEventListener("input", () => {
+            if (!isRoundActive()) return;
             answers[idx] = input.value;
             const ok = input.value.trim().toLowerCase() === String(entry.answer || "").trim().toLowerCase();
             if (ok) solved[idx] = true;

@@ -283,6 +283,7 @@
         if (!gameState || gameState.timerStatus !== "running") return Number(gameState?.durationSec || 120);
         return Math.max(0, Math.ceil((Number(gameState.timerEndsAtMs || 0) - Date.now()) / 1000));
       };
+      const isRoundActive = () => !!gameState && gameState.timerStatus === "running" && getRemaining() > 0;
 
       const aggregate = () => {
         const active = participants.filter((p) => Number(p.resetToken || 1) === Number(gameState?.resetToken || 1));
@@ -317,14 +318,15 @@
         targetLine.textContent = `Audience target total: ${audienceMax}`;
 
         let status = "Waiting for host.";
-        if (gameState.timerStatus === "running") status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() > 0) status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() <= 0) status = "Time is up. Waiting for host.";
         if (contestantProgress >= contestantMax) status = "Contestants reached max.";
         if (audienceProgress >= audienceMax) status = "Audience reached max.";
         if (gameState.timerStatus === "ended") status = "Round ended.";
         statusLine.textContent = status;
 
         if (role !== "host") {
-          const enabled = gameState.timerStatus === "running";
+          const enabled = isRoundActive();
           listEl.querySelectorAll("input").forEach((input) => {
             input.disabled = !enabled;
           });
@@ -355,24 +357,33 @@
           const row = document.createElement("div");
           row.className = "item";
           const hint = document.createElement("div");
-          hint.textContent = step.hint || "";
+          hint.textContent = idx === 0 ? `Start word: ${String(step.word || "").toUpperCase()}` : (step.hint || "");
           const input = document.createElement("input");
           input.type = "text";
           input.name = `ladder-${idx}`;
           input.autocomplete = "off";
-          input.value = answers[idx] || "";
-          input.disabled = !(gameState && gameState.timerStatus === "running");
+          if (idx === 0) {
+            input.value = String(step.word || "").toUpperCase();
+            input.disabled = true;
+            row.classList.add("solved");
+          } else {
+            input.value = answers[idx] || "";
+            input.disabled = !isRoundActive();
+          }
           if (solved[idx]) row.classList.add("solved");
-          input.addEventListener("input", () => {
-            answers[idx] = input.value;
-            const ok = input.value.trim().toLowerCase() === String(step.word || "").trim().toLowerCase();
-            if (ok) solved[idx] = true;
-            else delete solved[idx];
-            row.classList.toggle("solved", ok);
-            saveLocal();
-            syncProgress();
-            render();
-          });
+          if (idx !== 0) {
+            input.addEventListener("input", () => {
+              if (!isRoundActive()) return;
+              answers[idx] = input.value;
+              const ok = input.value.trim().toLowerCase() === String(step.word || "").trim().toLowerCase();
+              if (ok) solved[idx] = true;
+              else delete solved[idx];
+              row.classList.toggle("solved", ok);
+              saveLocal();
+              syncProgress();
+              render();
+            });
+          }
           row.appendChild(hint);
           row.appendChild(input);
           listEl.appendChild(row);

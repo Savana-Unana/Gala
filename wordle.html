@@ -370,6 +370,7 @@
         if (!gameState || gameState.timerStatus !== "running") return Number(gameState?.durationSec || 120);
         return Math.max(0, Math.ceil((Number(gameState.timerEndsAtMs || 0) - Date.now()) / 1000));
       };
+      const isRoundActive = () => !!gameState && gameState.timerStatus === "running" && getRemaining() > 0;
 
       const aggregate = () => {
         const active = participants.filter((p) => Number(p.resetToken || 1) === Number(gameState?.resetToken || 1));
@@ -438,15 +439,16 @@
         ruleLine.textContent = `Audience target words: ${audienceTarget}`;
 
         if (role !== "host") {
-          wordInfo.textContent = gameState.timerStatus === "running"
+          wordInfo.textContent = isRoundActive()
             ? `Word ${wordIndex + 1} of ${words.length}.`
             : "Waiting for host to start the round.";
-          guessInput.disabled = gameState.timerStatus !== "running" || !activeWord();
+          guessInput.disabled = !isRoundActive() || !activeWord();
           guessSubmit.disabled = guessInput.disabled;
         }
 
         let status = "Waiting for host.";
-        if (gameState.timerStatus === "running") status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() > 0) status = "Round active.";
+        if (gameState.timerStatus === "running" && getRemaining() <= 0) status = "Time is up. Waiting for host.";
         if (contestantProgress >= 1) status = "Contestants solved their word.";
         if (audienceProgress >= audienceTarget) status = "Audience reached target words.";
         if (gameState.timerStatus === "ended") {
@@ -459,6 +461,7 @@
 
       const submitGuess = async () => {
         if (role === "host") return;
+        if (!isRoundActive()) return;
         const target = activeWord();
         const guess = guessInput.value.trim().toLowerCase();
         if (!target || guess.length !== target.length) return;
