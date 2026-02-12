@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Black Tie Gala - The Final Game</title>
+    <script>
+      window.FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCcR537OUiw_M9iy29em6kBGfn-z7Tf7-8",
+        authDomain: "gala-99db5.firebaseapp.com",
+        projectId: "gala-99db5",
+        storageBucket: "gala-99db5.firebasestorage.app",
+        messagingSenderId: "75610830408",
+        appId: "1:75610830408:web:111f50ea866528ac5a8a7d",
+        measurementId: "G-7P75W73C4B"
+      };
+      window.EVENT_ID = "black-tie-gala-2026-02-09";
+    </script>
+    <style>
+      :root {
+        --bg-1: #0b0d12;
+        --bg-2: #161b24;
+        --bg-3: #0f141c;
+        --gold-1: #f6d67b;
+        --gold-2: #c9a44d;
+        --ink: #e9eef6;
+        --muted: #a6b3c6;
+        --card: rgba(17, 20, 28, 0.85);
+        --stroke: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        --ok: #5fd6a6;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+        background:
+          radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        min-height: 100vh;
+      }
+      main { max-width: 1120px; margin: 0 auto; padding: 24px 16px 40px; }
+      .glass {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+      .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+      .top h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.3rem); }
+      .meta { display: flex; gap: 8px; align-items: center; font-family: "Work Sans", "Segoe UI", Arial, sans-serif; color: var(--muted); }
+      .pill { border: 1px solid var(--stroke); border-radius: 999px; padding: 6px 10px; font-size: 0.82rem; }
+      a.back { text-decoration: none; color: #151515; background: linear-gradient(135deg, var(--gold-1), var(--gold-2)); border-radius: 10px; padding: 8px 12px; font-family: "Work Sans", "Segoe UI", Arial, sans-serif; font-weight: 600; }
+      .layout { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(260px, 320px); }
+      .status { font-family: "Work Sans", "Segoe UI", Arial, sans-serif; color: var(--muted); font-size: 0.92rem; text-align: center; }
+      .timer { font-family: "Work Sans", "Segoe UI", Arial, sans-serif; font-size: 1.9rem; text-align: center; }
+      .votes-grid { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .vote-card {
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+        justify-items: center;
+        text-align: center;
+      }
+      .vote-card img { width: 96px; height: 96px; border-radius: 10px; border: 1px solid var(--stroke); }
+      .vote-card h3 { margin: 0; font-size: 1rem; }
+      .vote-card p { margin: 0; color: var(--muted); font-family: "Work Sans", "Segoe UI", Arial, sans-serif; font-size: 0.88rem; }
+      .vote-card button {
+        border: none;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      }
+      .vote-card.selected {
+        border-color: rgba(95, 214, 166, 0.5);
+        box-shadow: inset 0 0 0 1px rgba(95, 214, 166, 0.4);
+      }
+      .side { display: grid; gap: 10px; }
+      .controls { display: grid; gap: 8px; }
+      .controls button {
+        border: none;
+        border-radius: 10px;
+        padding: 9px 10px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      }
+      .controls button.alt { background: rgba(255, 255, 255, 0.1); color: var(--ink); border: 1px solid var(--stroke); }
+      .hidden { display: none; }
+      @media (max-width: 880px) {
+        .layout { grid-template-columns: 1fr; }
+        .votes-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="top">
+        <h1>The Final Game</h1>
+        <div class="meta">
+          <span class="pill" id="role-pill">Role</span>
+          <a class="back" id="back-link" href="index.html">Back</a>
+        </div>
+      </div>
+
+      <section class="layout">
+        <section class="glass">
+          <div class="status" id="status-line">Waiting for host.</div>
+          <div style="height:10px"></div>
+          <div class="votes-grid" id="votes-grid"></div>
+        </section>
+        <aside class="side glass">
+          <div class="timer" id="timer-display">00:30</div>
+          <div class="status" id="total-line">Total votes this round: 0</div>
+          <div class="controls hidden" id="host-controls">
+            <button id="start-btn">Start 30s Round</button>
+            <button class="alt" id="end-btn">End Round</button>
+            <button class="alt" id="reset-btn">Reset Round</button>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+        updateDoc,
+        onSnapshot,
+        collection,
+        serverTimestamp
+      } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+      const items = [
+        { id: "skip", name: "Lunch Line Skip Pass", icon: "PP", bg: "#7f5af0" },
+        { id: "diary", name: "Diary with Pen", icon: "DI", bg: "#2f7cdb" },
+        { id: "star", name: "Star Trophy", icon: "ST", bg: "#d18c1f" }
+      ];
+
+      const params = new URLSearchParams(location.search);
+      const contestantAccessId = window.CONTESTANT_ACCESS_ID || "contestant-1";
+      const requestedRole = ["host", "contestant", "audience"].includes(params.get("role"))
+        ? params.get("role")
+        : "audience";
+      const requestedId = params.get("id");
+      const hostAuthorized = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") === "1";
+      const role = hostAuthorized ? "host" : "audience";
+
+      const resolveClientId = () => {
+        if (role === "host") return requestedId || "host-control";
+        const key = "gala-client-id-final-audience";
+        const existing = localStorage.getItem(key);
+        if (existing) return existing;
+        const created = `audience-${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem(key, created);
+        return created;
+      };
+
+      const clientId = resolveClientId();
+      const rolePill = document.getElementById("role-pill");
+      const backLink = document.getElementById("back-link");
+      const hostControls = document.getElementById("host-controls");
+      const statusLine = document.getElementById("status-line");
+      const totalLine = document.getElementById("total-line");
+      const timerDisplay = document.getElementById("timer-display");
+      const votesGrid = document.getElementById("votes-grid");
+
+      const roleLabel = role === "host" ? "Host Control" : "Audience Device";
+      rolePill.textContent = roleLabel;
+      backLink.href = role === "host"
+        ? "host.html"
+        : requestedId === contestantAccessId
+          ? `index.html?id=${encodeURIComponent(contestantAccessId)}`
+          : "index.html";
+      if (role === "host") hostControls.classList.remove("hidden");
+
+      const localKey = `final:${role}:${clientId}`;
+      const localState = JSON.parse(localStorage.getItem(localKey) || "{}");
+      let selectedChoice = localState.selectedChoice || "";
+      let gameState = null;
+      let participants = [];
+      let hasSeenGameState = false;
+
+      const app = initializeApp(window.FIREBASE_CONFIG || null);
+      const db = getFirestore(app);
+      const gameRef = doc(db, "events", window.EVENT_ID || "black-tie-gala", "games", "final_game");
+      const participantsRef = collection(gameRef, "participants");
+      const participantRef = doc(participantsRef, `audience-${clientId}`);
+
+      const makeImage = (txt, bg) => {
+        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><rect width='128' height='128' rx='14' fill='${bg}'/><text x='64' y='74' text-anchor='middle' font-family='Arial' font-size='34' fill='white' font-weight='700'>${txt}</text></svg>`;
+        return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      };
+
+      const saveLocal = () => {
+        localStorage.setItem(localKey, JSON.stringify({ selectedChoice }));
+      };
+
+      const getRemaining = () => {
+        if (!gameState || gameState.timerStatus !== "running") return Number(gameState?.durationSec || 30);
+        return Math.max(0, Math.ceil((Number(gameState.timerEndsAtMs || 0) - Date.now()) / 1000));
+      };
+
+      const formatTime = (seconds) => {
+        const s = Math.max(0, seconds);
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
+      };
+
+      const voteCounts = () => {
+        const token = Number(gameState?.resetToken || 1);
+        const active = participants.filter((p) => Number(p.resetToken || 1) === token);
+        const byId = Object.fromEntries(items.map((i) => [i.id, 0]));
+        for (const p of active) {
+          const key = String(p.choiceId || "");
+          if (byId[key] !== undefined) byId[key] += 1;
+        }
+        return { byId, total: active.filter((p) => p.choiceId).length };
+      };
+
+      const syncVote = async () => {
+        if (role === "host") return;
+        await setDoc(
+          participantRef,
+          {
+            role: "audience",
+            choiceId: selectedChoice || null,
+            resetToken: Number(gameState?.resetToken || 1),
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+      };
+
+      const renderChoices = () => {
+        const running = !!gameState && gameState.timerStatus === "running" && getRemaining() > 0;
+        const counts = voteCounts();
+        votesGrid.innerHTML = "";
+
+        items.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "vote-card";
+          if (selectedChoice === item.id) card.classList.add("selected");
+
+          const img = document.createElement("img");
+          img.src = makeImage(item.icon, item.bg);
+          img.alt = item.name;
+
+          const name = document.createElement("h3");
+          name.textContent = item.name;
+
+          const votes = document.createElement("p");
+          votes.textContent = `Votes: ${counts.byId[item.id] || 0}`;
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = selectedChoice === item.id ? "Selected" : "Vote";
+          btn.disabled = role === "host" || !running;
+          btn.addEventListener("click", async () => {
+            if (!running) return;
+            selectedChoice = item.id;
+            saveLocal();
+            await syncVote();
+            renderChoices();
+          });
+
+          card.appendChild(img);
+          card.appendChild(name);
+          card.appendChild(votes);
+          card.appendChild(btn);
+          votesGrid.appendChild(card);
+        });
+      };
+
+      const render = () => {
+        if (!gameState) return;
+        const remaining = getRemaining();
+        timerDisplay.textContent = formatTime(remaining);
+        totalLine.textContent = `Total votes this round: ${voteCounts().total}`;
+
+        let status = "Waiting for host.";
+        if (gameState.timerStatus === "running" && remaining > 0) status = "Voting is open.";
+        if (gameState.timerStatus === "running" && remaining <= 0) status = "Time is up. Waiting for host to end.";
+        if (gameState.timerStatus === "ended") status = "Voting ended.";
+        statusLine.textContent = status;
+
+        renderChoices();
+      };
+
+      const startRound = async () => {
+        const durationSec = Number(gameState?.durationSec || 30);
+        const now = Date.now();
+        await updateDoc(gameRef, {
+          timerStatus: "running",
+          timerStartedAtMs: now,
+          timerEndsAtMs: now + durationSec * 1000,
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      const endRound = async () => {
+        await updateDoc(gameRef, {
+          timerStatus: "ended",
+          timerEndsAtMs: Date.now(),
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      const resetRound = async () => {
+        await updateDoc(gameRef, {
+          timerStatus: "idle",
+          timerStartedAtMs: null,
+          timerEndsAtMs: null,
+          resetToken: Date.now(),
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      document.getElementById("start-btn")?.addEventListener("click", startRound);
+      document.getElementById("end-btn")?.addEventListener("click", endRound);
+      document.getElementById("reset-btn")?.addEventListener("click", resetRound);
+
+      const initGame = async () => {
+        const snap = await getDoc(gameRef);
+        if (snap.exists()) return;
+        await setDoc(gameRef, {
+          durationSec: 30,
+          timerStatus: "idle",
+          timerStartedAtMs: null,
+          timerEndsAtMs: null,
+          resetToken: 1,
+          updatedAt: serverTimestamp()
+        });
+      };
+      await initGame();
+
+      onSnapshot(gameRef, async (snap) => {
+        if (!snap.exists()) return;
+        const prevToken = Number(gameState?.resetToken || 1);
+        gameState = snap.data() || {};
+        const nextToken = Number(gameState.resetToken || 1);
+        if (hasSeenGameState && nextToken !== prevToken && role !== "host") {
+          selectedChoice = "";
+          saveLocal();
+          await syncVote();
+        }
+        hasSeenGameState = true;
+        render();
+      });
+
+      onSnapshot(participantsRef, (snap) => {
+        participants = snap.docs.map((d) => d.data());
+        render();
+      });
+
+      if (role !== "host") {
+        await syncVote();
+      }
+
+      setInterval(render, 300);
+    </script>
+  </body>
+</html>

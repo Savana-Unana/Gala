@@ -216,21 +216,24 @@
         setDoc,
         getDoc,
         updateDoc,
+        runTransaction,
         onSnapshot,
         collection,
         serverTimestamp
       } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
       const params = new URLSearchParams(location.search);
+      const contestantAccessId = window.CONTESTANT_ACCESS_ID || "contestant-1";
       const requestedRole = ["host", "contestant", "audience"].includes(params.get("role"))
         ? params.get("role")
         : "audience";
-      const role = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") !== "1"
-        ? "audience"
-        : requestedRole;
+      const requestedId = params.get("id");
+      const hostAuthorized = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") === "1";
+      const contestantAuthorized = requestedRole === "contestant" && requestedId === contestantAccessId;
+      const role = hostAuthorized ? "host" : contestantAuthorized ? "contestant" : "audience";
       const resolveClientId = () => {
-        const fromQuery = params.get("id");
-        if (fromQuery) return fromQuery;
+        if (role === "host") return requestedId || "host-control";
+        if (role === "contestant") return contestantAccessId;
         const key = `gala-client-id-${role}`;
         const existing = localStorage.getItem(key);
         if (existing) return existing;
@@ -259,7 +262,11 @@
 
       const roleLabel = role === "contestant" ? "Contestant Device" : role === "audience" ? "Audience Device" : "Host Control";
       rolePill.textContent = roleLabel;
-      backLink.href = role === "host" ? "host.html" : "index.html";
+      backLink.href = role === "host"
+        ? "host.html"
+        : role === "contestant"
+          ? `index.html?id=${encodeURIComponent(contestantAccessId)}`
+          : "index.html";
       if (role === "host") {
         playArea.classList.add("hidden");
         hostControls.classList.remove("hidden");
@@ -271,11 +278,15 @@
       let solved = localState.solved || {};
       let answers = localState.answers || {};
       let gameState = null;
+      let scoreState = { pointsContestants: 0, pointsAudience: 0 };
       let participants = [];
+      let loadedToken = null;
+      let hasSeenGameState = false;
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       const gameRef = doc(db, "events", eventId, "games", "anagram");
+      const scoreRef = doc(db, "events", eventId, "scoreboard", "global");
       const participantsRef = collection(gameRef, "participants");
       const participantRef = doc(participantsRef, `${role}-${clientId}`);
 
@@ -353,8 +364,8 @@
         audScore.textContent = String(audienceProgress);
         hostMeter.style.width = `${Math.min(100, (contestantProgress / Math.max(1, contestantTotalWords)) * 100)}%`;
         audMeter.style.width = `${Math.min(100, (audienceProgress / Math.max(1, audienceTarget)) * 100)}%`;
-        hostPoints.textContent = String(gameState.pointsContestants || 0);
-        audPoints.textContent = String(gameState.pointsAudience || 0);
+        hostPoints.textContent = String(scoreState.pointsContestants || 0);
+        audPoints.textContent = String(scoreState.pointsAudience || 0);
         timerDisplay.textContent = formatTime(getRemaining());
         targetLine.textContent = `Audience target total: ${audienceTarget}`;
 
@@ -364,6 +375,16 @@
         if (contestantProgress >= contestantTotalWords) status = "Contestants finished all words.";
         if (audienceProgress >= audienceTarget) status = "Audience reached target.";
         statusLine.textContent = status;
+
+        if (role !== "host") {
+          const enabled = gameState.timerStatus === "running";
+          listEl.querySelectorAll("input").forEach((input) => {
+            input.disabled = !enabled;
+          });
+          if (!enabled && loadedToken === null) {
+            listEl.innerHTML = "<div class=\"status\">Round has not started yet.</div>";
+          }
+        }
       };
 
       const syncProgress = async () => {
@@ -393,6 +414,7 @@
           input.name = `anagram-${idx}`;
           input.autocomplete = "off";
           input.value = answers[idx] || "";
+          input.disabled = !(gameState && gameState.timerStatus === "running");
           if (solved[idx]) row.classList.add("solved");
           input.addEventListener("input", () => {
             answers[idx] = input.value;
@@ -463,8 +485,26 @@
       };
 
       const addPoints = async (field, delta) => {
-        const next = Math.max(0, Number(gameState?.[field] || 0) + delta);
-        await updateDoc(gameRef, { [field]: next, updatedAt: serverTimestamp() });
+        await runTransaction(db, async (tx) => {
+          const snap = await tx.get(scoreRef);
+          const currentHost = Number(snap.data()?.pointsContestants || 0);
+          const currentAud = Number(snap.data()?.pointsAudience || 0);
+          const nextHost = field === "pointsContestants" ? Math.max(0, currentHost + delta) : currentHost;
+          const nextAud = field === "pointsAudience" ? Math.max(0, currentAud + delta) : currentAud;
+          if (!snap.exists()) {
+            tx.set(scoreRef, {
+              pointsContestants: nextHost,
+              pointsAudience: nextAud,
+              updatedAt: serverTimestamp()
+            });
+            return;
+          }
+          tx.update(scoreRef, {
+            pointsContestants: nextHost,
+            pointsAudience: nextAud,
+            updatedAt: serverTimestamp()
+          });
+        });
       };
 
       document.getElementById("start-btn")?.addEventListener("click", startRound);
@@ -498,12 +538,26 @@
         if (!snap.exists()) return;
         const prevToken = Number(gameState?.resetToken || 1);
         gameState = snap.data() || {};
-        if (Number(gameState.resetToken || 1) !== prevToken && role !== "host") {
+        if (hasSeenGameState && Number(gameState.resetToken || 1) !== prevToken && role !== "host") {
           solved = {};
           answers = {};
+          loadedToken = null;
+          words = [];
           saveLocal();
-          renderList();
           await syncProgress();
+        }
+        hasSeenGameState = true;
+        if (role !== "host") {
+          const token = Number(gameState.resetToken || 1);
+          if (gameState.timerStatus === "running" && loadedToken !== token) {
+            await loadWords();
+            loadedToken = token;
+          }
+          if (gameState.timerStatus !== "running" && loadedToken !== null) {
+            loadedToken = null;
+            words = [];
+            listEl.innerHTML = "<div class=\"status\">Round has not started yet.</div>";
+          }
         }
         render();
       });
@@ -513,8 +567,17 @@
         render();
       });
 
+      onSnapshot(scoreRef, (snap) => {
+        const d = snap.data() || {};
+        scoreState = {
+          pointsContestants: Number(d.pointsContestants || 0),
+          pointsAudience: Number(d.pointsAudience || 0)
+        };
+        render();
+      });
+
       if (role !== "host") {
-        await loadWords();
+        listEl.innerHTML = "<div class=\"status\">Round has not started yet.</div>";
         await syncProgress();
       }
       setInterval(render, 300);

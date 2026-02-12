@@ -157,7 +157,7 @@
         <aside class="side glass">
           <div class="timer" id="timer-display">02:00</div>
           <div class="status" id="status-line">Waiting for host.</div>
-          <div class="status" id="rule-line">Audience target words: 5</div>
+          <div class="status" id="rule-line">Audience target words: 7</div>
 
           <div class="controls hidden" id="host-controls">
             <button id="start-btn">Start Timer</button>
@@ -167,7 +167,6 @@
             <button id="add-aud-point">+1 Audience Point</button>
             <button class="alt" id="sub-host-point">-1 Contestants Point</button>
             <button class="alt" id="sub-aud-point">-1 Audience Point</button>
-            <button class="alt" id="raise-aud-target">Audience Target +1</button>
             <button class="alt" id="reset-stats-btn">Reset Stats</button>
           </div>
         </aside>
@@ -182,21 +181,24 @@
         setDoc,
         getDoc,
         updateDoc,
+        runTransaction,
         onSnapshot,
         collection,
         serverTimestamp
       } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
       const params = new URLSearchParams(location.search);
+      const contestantAccessId = window.CONTESTANT_ACCESS_ID || "contestant-1";
       const requestedRole = ["host", "contestant", "audience"].includes(params.get("role"))
         ? params.get("role")
         : "audience";
-      const role = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") !== "1"
-        ? "audience"
-        : requestedRole;
+      const requestedId = params.get("id");
+      const hostAuthorized = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") === "1";
+      const contestantAuthorized = requestedRole === "contestant" && requestedId === contestantAccessId;
+      const role = hostAuthorized ? "host" : contestantAuthorized ? "contestant" : "audience";
       const resolveClientId = () => {
-        const fromQuery = params.get("id");
-        if (fromQuery) return fromQuery;
+        if (role === "host") return requestedId || "host-control";
+        if (role === "contestant") return contestantAccessId;
         const key = `gala-client-id-${role}`;
         const existing = localStorage.getItem(key);
         if (existing) return existing;
@@ -225,7 +227,11 @@
 
       const roleLabel = role === "contestant" ? "Contestant Device" : role === "audience" ? "Audience Device" : "Host Control";
       rolePill.textContent = roleLabel;
-      backLink.href = role === "host" ? "host.html" : "index.html";
+      backLink.href = role === "host"
+        ? "host.html"
+        : role === "contestant"
+          ? `index.html?id=${encodeURIComponent(contestantAccessId)}`
+          : "index.html";
       if (role === "host") {
         playArea.classList.add("hidden");
         hostControls.classList.remove("hidden");
@@ -237,16 +243,20 @@
       const localState = JSON.parse(localStorage.getItem(localKey) || "{}");
 
       let gameState = null;
+      let scoreState = { pointsContestants: 0, pointsAudience: 0 };
       let participants = [];
       let words = [];
       let wordIndex = Number(localState.wordIndex || 0);
       let solvedWords = Number(localState.solvedWords || 0);
       let guessesByWord = localState.guessesByWord || {};
       const wordCheckCache = new Map();
+      let loadedToken = null;
+      let hasSeenGameState = false;
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       const gameRef = doc(db, "events", eventId, "games", "wordle");
+      const scoreRef = doc(db, "events", eventId, "scoreboard", "global");
       const participantsRef = collection(gameRef, "participants");
       const participantRef = doc(participantsRef, `${role}-${clientId}`);
 
@@ -350,6 +360,10 @@
 
       const renderBoard = () => {
         if (role === "host") return;
+        if (!gameState || gameState.timerStatus !== "running") {
+          boardEl.innerHTML = "<div class=\"status\">Round has not started yet.</div>";
+          return;
+        }
         const target = activeWord();
         const guesses = guessesByWord[wordIndex] || [];
         boardEl.innerHTML = "";
@@ -389,19 +403,21 @@
         const audienceProgress = role === "audience"
           ? Math.max(totals.audienceSolved, solvedWords)
           : totals.audienceSolved;
-        const audienceTarget = Number(gameState.audienceTargetWords || 5);
+        const audienceTarget = Number(gameState.audienceTargetWords || 7);
 
         hostScore.textContent = String(contestantProgress);
         audScore.textContent = String(audienceProgress);
         hostMeter.style.width = `${Math.min(100, contestantProgress * 100)}%`;
         audMeter.style.width = `${Math.min(100, (audienceProgress / Math.max(1, audienceTarget)) * 100)}%`;
-        hostPoints.textContent = String(gameState.pointsContestants || 0);
-        audPoints.textContent = String(gameState.pointsAudience || 0);
+        hostPoints.textContent = String(scoreState.pointsContestants || 0);
+        audPoints.textContent = String(scoreState.pointsAudience || 0);
         timerDisplay.textContent = formatTime(getRemaining());
         ruleLine.textContent = `Audience target words: ${audienceTarget}`;
 
         if (role !== "host") {
-          wordInfo.textContent = `Word ${wordIndex + 1} of ${words.length}.`;
+          wordInfo.textContent = gameState.timerStatus === "running"
+            ? `Word ${wordIndex + 1} of ${words.length}.`
+            : "Waiting for host to start the round.";
           guessInput.disabled = gameState.timerStatus !== "running" || !activeWord();
           guessSubmit.disabled = guessInput.disabled;
         }
@@ -458,13 +474,11 @@
 
       const endRound = async () => {
         const totals = aggregate();
-        const audienceTarget = Number(gameState?.audienceTargetWords || 5);
-        let nextTarget = audienceTarget;
-        if (totals.audienceSolved < audienceTarget) nextTarget = audienceTarget + 1;
+        const audienceTarget = Number(gameState?.audienceTargetWords || 7);
         await updateDoc(gameRef, {
           timerStatus: "ended",
           timerEndsAtMs: Date.now(),
-          audienceTargetWords: nextTarget,
+          audienceTargetWords: audienceTarget,
           updatedAt: serverTimestamp()
         });
       };
@@ -481,6 +495,7 @@
 
       const resetStats = async () => {
         await updateDoc(gameRef, {
+          audienceTargetWords: 7,
           wordSeed: Date.now(),
           resetToken: Date.now(),
           updatedAt: serverTimestamp()
@@ -488,13 +503,26 @@
       };
 
       const addPoints = async (field, delta) => {
-        const next = Math.max(0, Number(gameState?.[field] || 0) + delta);
-        await updateDoc(gameRef, { [field]: next, updatedAt: serverTimestamp() });
-      };
-
-      const raiseAudienceTarget = async () => {
-        const next = Number(gameState?.audienceTargetWords || 5) + 1;
-        await updateDoc(gameRef, { audienceTargetWords: next, updatedAt: serverTimestamp() });
+        await runTransaction(db, async (tx) => {
+          const snap = await tx.get(scoreRef);
+          const currentHost = Number(snap.data()?.pointsContestants || 0);
+          const currentAud = Number(snap.data()?.pointsAudience || 0);
+          const nextHost = field === "pointsContestants" ? Math.max(0, currentHost + delta) : currentHost;
+          const nextAud = field === "pointsAudience" ? Math.max(0, currentAud + delta) : currentAud;
+          if (!snap.exists()) {
+            tx.set(scoreRef, {
+              pointsContestants: nextHost,
+              pointsAudience: nextAud,
+              updatedAt: serverTimestamp()
+            });
+            return;
+          }
+          tx.update(scoreRef, {
+            pointsContestants: nextHost,
+            pointsAudience: nextAud,
+            updatedAt: serverTimestamp()
+          });
+        });
       };
 
       document.getElementById("guess-submit")?.addEventListener("click", submitGuess);
@@ -508,7 +536,6 @@
       document.getElementById("add-aud-point")?.addEventListener("click", () => addPoints("pointsAudience", 1));
       document.getElementById("sub-host-point")?.addEventListener("click", () => addPoints("pointsContestants", -1));
       document.getElementById("sub-aud-point")?.addEventListener("click", () => addPoints("pointsAudience", -1));
-      document.getElementById("raise-aud-target")?.addEventListener("click", raiseAudienceTarget);
       document.getElementById("reset-stats-btn")?.addEventListener("click", resetStats);
 
       const loadWords = async () => {
@@ -544,7 +571,7 @@
           timerEndsAtMs: null,
           pointsContestants: 0,
           pointsAudience: 0,
-          audienceTargetWords: 5,
+          audienceTargetWords: 7,
           wordSeed: 1,
           resetToken: 1,
           updatedAt: serverTimestamp()
@@ -556,14 +583,28 @@
         if (!snap.exists()) return;
         const prevToken = Number(gameState?.resetToken || 1);
         gameState = snap.data() || {};
-        if (Number(gameState.resetToken || 1) !== prevToken && role !== "host") {
+        if (hasSeenGameState && Number(gameState.resetToken || 1) !== prevToken && role !== "host") {
           wordIndex = 0;
           solvedWords = 0;
           guessesByWord = {};
+          loadedToken = null;
+          words = [];
           saveLocal();
-          await loadWords();
           renderBoard();
           await syncProgress();
+        }
+        hasSeenGameState = true;
+        if (role !== "host") {
+          const token = Number(gameState.resetToken || 1);
+          if (gameState.timerStatus === "running" && loadedToken !== token) {
+            await loadWords();
+            loadedToken = token;
+          }
+          if (gameState.timerStatus !== "running" && loadedToken !== null) {
+            loadedToken = null;
+            words = [];
+            renderBoard();
+          }
         }
         render();
       });
@@ -573,8 +614,17 @@
         render();
       });
 
+      onSnapshot(scoreRef, (snap) => {
+        const d = snap.data() || {};
+        scoreState = {
+          pointsContestants: Number(d.pointsContestants || 0),
+          pointsAudience: Number(d.pointsAudience || 0)
+        };
+        render();
+      });
+
       if (role !== "host") {
-        await loadWords();
+        renderBoard();
         await syncProgress();
       }
       setInterval(render, 300);

@@ -1,7 +1,7 @@
 {
   "audience_words_per_player": 10,
   "contestant": [
-    { "scramble": "RACEG", "answer": "GRACE" },
+    { "scramble": "DARBE", "answer": "BREAD" },
     { "scramble": "TSYEL", "answer": "STYLE" },
     { "scramble": "RSEDS", "answer": "DRESS" },
     { "scramble": "ICSMU", "answer": "MUSIC" },
@@ -10,7 +10,17 @@
     { "scramble": "TGAES", "answer": "STAGE" },
     { "scramble": "VCIOE", "answer": "VOICE" },
     { "scramble": "TIGNH", "answer": "NIGHT" },
-    { "scramble": "TRAPS", "answer": "PARTS" }
+    { "scramble": "RATPY", "answer": "PARTY" },
+    { "scramble": "UADIO", "answer": "AUDIO" },
+    { "scramble": "EPKAS", "answer": "SPEAK" },
+    { "scramble": "YROST", "answer": "STORY" },
+    { "scramble": "LMISE", "answer": "SMILE" },
+    { "scramble": "HUGAL", "answer": "LAUGH" },
+    { "scramble": "EEVTN", "answer": "EVENT" },
+    { "scramble": "NDSUO", "answer": "SOUND" },
+    { "scramble": "MRAHC", "answer": "CHARM" },
+    { "scramble": "BSVEI", "answer": "VIBES" },
+    { "scramble": "LATBE", "answer": "TABLE" }
   ],
   "audience_pool": [
     { "scramble": "TSEUG", "answer": "GUEST" },
@@ -23,26 +33,22 @@
     { "scramble": "VCIOE", "answer": "VOICE" },
     { "scramble": "DORCW", "answer": "CROWD" },
     { "scramble": "RHEEC", "answer": "CHEER" },
-    { "scramble": "RSEDS", "answer": "DRESS" },
     { "scramble": "ITUSS", "answer": "SUITS" },
     { "scramble": "LCAOV", "answer": "VOCAL" },
     { "scramble": "YNCFA", "answer": "FANCY" },
     { "scramble": "LCSAS", "answer": "CLASS" },
     { "scramble": "RATPY", "answer": "PARTY" },
     { "scramble": "UADIO", "answer": "AUDIO" },
-    { "scramble": "SLTGIH", "answer": "LIGHTS" },
+    { "scramble": "LTGIH", "answer": "LIGHT" },
     { "scramble": "EPKAS", "answer": "SPEAK" },
     { "scramble": "YROST", "answer": "STORY" },
     { "scramble": "LMISE", "answer": "SMILE" },
     { "scramble": "HUGAL", "answer": "LAUGH" },
     { "scramble": "EEVTN", "answer": "EVENT" },
-    { "scramble": "TONES", "answer": "NOTES" },
     { "scramble": "NDSUO", "answer": "SOUND" },
     { "scramble": "MRAHC", "answer": "CHARM" },
-    { "scramble": "BSVEI", "answer": "VIBES" },
     { "scramble": "LATBE", "answer": "TABLE" },
     { "scramble": "TOAES", "answer": "TOAST" },
-    { "scramble": "STRAS", "answer": "STARS" },
     { "scramble": "RACGE", "answer": "GRACE" },
     { "scramble": "TSYEL", "answer": "STYLE" },
     { "scramble": "YLEEG", "answer": "ELEGY" },
@@ -71,7 +77,6 @@
     { "scramble": "ALIOV", "answer": "VIOLA" },
     { "scramble": "GNAEL", "answer": "ANGEL" },
     { "scramble": "CRWON", "answer": "CROWN" },
-    { "scramble": "UQEEN", "answer": "QUEEN" },
-    { "scramble": "NGSKI", "answer": "KINGS" }
+    { "scramble": "UQEEN", "answer": "QUEEN" }
   ]
 }
