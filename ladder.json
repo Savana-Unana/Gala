@@ -1,23 +1,104 @@
 {
-  "audience": [
+  "contestant_ladder": {
+    "start": "COLD",
+    "end": "WARM",
+    "steps": [
+      { "word": "CORD", "hint": "Change one letter from COLD" },
+      { "word": "CARD", "hint": "Now a paper rectangle for payment" },
+      { "word": "WARD", "hint": "Hospital section" },
+      { "word": "WARE", "hint": "Goods for sale" },
+      { "word": "WAVE", "hint": "Ocean movement" },
+      { "word": "SAVE", "hint": "Rescue from danger" },
+      { "word": "SAGE", "hint": "Wise person" },
+      { "word": "PAGE", "hint": "A sheet in a book" },
+      { "word": "PALE", "hint": "Light in color" },
+      { "word": "SALE", "hint": "Discount event" },
+      { "word": "SALT", "hint": "White seasoning" },
+      { "word": "MALT", "hint": "Used in brewing" },
+      { "word": "MART", "hint": "Market" },
+      { "word": "WART", "hint": "Small skin growth" },
+      { "word": "WARM", "hint": "Not cold" }
+    ]
+  },
+  "audience_pool": [
     {
       "start": "COLD",
       "end": "WARM",
       "steps": [
-        { "word": "CORD", "hint": "Change last letter" },
-        { "word": "CARD", "hint": "Change second letter" },
-        { "word": "WARD", "hint": "Change first letter" },
-        { "word": "WARM", "hint": "Change last letter" }
+        { "word": "CORD", "hint": "Rope-like string" },
+        { "word": "CARD", "hint": "Plastic in your wallet" },
+        { "word": "WARD", "hint": "Hospital division" },
+        { "word": "WARD", "hint": "Same as previous to steady the chain" },
+        { "word": "WARM", "hint": "Opposite of cold" },
+        { "word": "WORM", "hint": "Garden crawler" },
+        { "word": "WORD", "hint": "Unit of language" },
+        { "word": "WOOD", "hint": "Tree material" },
+        { "word": "MOOD", "hint": "Emotional state" },
+        { "word": "FOOD", "hint": "You eat this" }
       ]
-    }
-  ],
-  "host": [
+    },
     {
-      "start": "GALA",
-      "end": "GOLD",
+      "start": "MAKE",
+      "end": "TAKE",
       "steps": [
-        { "word": "GALL", "hint": "Swap one letter" },
-        { "word": "GOLD", "hint": "Swap one letter" }
+        { "word": "BAKE", "hint": "Use an oven" },
+        { "word": "CAKE", "hint": "Birthday dessert" },
+        { "word": "CANE", "hint": "Walking stick" },
+        { "word": "CAVE", "hint": "Natural underground room" },
+        { "word": "SAVE", "hint": "Rescue" },
+        { "word": "SAGE", "hint": "Wise elder" },
+        { "word": "PAGE", "hint": "Book sheet" },
+        { "word": "PAVE", "hint": "Cover with stone" },
+        { "word": "PATE", "hint": "Top of head" },
+        { "word": "TAKE", "hint": "Opposite of give" }
+      ]
+    },
+    {
+      "start": "FIND",
+      "end": "MIND",
+      "steps": [
+        { "word": "FINE", "hint": "Very good" },
+        { "word": "PINE", "hint": "Needle-leaf tree" },
+        { "word": "PINT", "hint": "Liquid measure" },
+        { "word": "MINT", "hint": "Fresh herb flavor" },
+        { "word": "MINE", "hint": "Excavation site" },
+        { "word": "DINE", "hint": "Eat dinner" },
+        { "word": "DING", "hint": "Small dent" },
+        { "word": "SING", "hint": "Use your voice musically" },
+        { "word": "RING", "hint": "Circular band" },
+        { "word": "MIND", "hint": "Thinking faculty" }
+      ]
+    },
+    {
+      "start": "NOTE",
+      "end": "TONE",
+      "steps": [
+        { "word": "VOTE", "hint": "Cast a ballot" },
+        { "word": "VETO", "hint": "Official rejection" },
+        { "word": "META", "hint": "Beyond, in modern slang" },
+        { "word": "MATE", "hint": "Friend" },
+        { "word": "LATE", "hint": "Not early" },
+        { "word": "LITE", "hint": "Diet label variant" },
+        { "word": "LINE", "hint": "Straight mark" },
+        { "word": "LONE", "hint": "By yourself" },
+        { "word": "BONE", "hint": "Part of skeleton" },
+        { "word": "TONE", "hint": "Sound quality" }
+      ]
+    },
+    {
+      "start": "GAME",
+      "end": "GALA",
+      "steps": [
+        { "word": "FAME", "hint": "Public renown" },
+        { "word": "FATE", "hint": "Destiny" },
+        { "word": "LATE", "hint": "Opposite of early" },
+        { "word": "LAVA", "hint": "Molten rock" },
+        { "word": "GAZA", "hint": "Place name bridge step" },
+        { "word": "GALA", "hint": "Formal party" },
+        { "word": "GALE", "hint": "Strong wind" },
+        { "word": "MALE", "hint": "One sex classification" },
+        { "word": "MALL", "hint": "Shopping center" },
+        { "word": "GALL", "hint": "Bold nerve" }
       ]
     }
   ]

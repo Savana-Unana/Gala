@@ -1,4 +1,36 @@
 {
-  "audience": ["GUEST", "BLACK", "MUSIC", "NIGHT", "PRIZE"],
-  "host": ["TIE", "GALA", "VOTE"]
+  "contestant_word": "grace",
+  "audience_words_per_player": 10,
+  "audience_pool": [
+    "guest",
+    "black",
+    "music",
+    "night",
+    "prize",
+    "dance",
+    "stage",
+    "voice",
+    "crowd",
+    "cheer",
+    "dress",
+    "suits",
+    "vocal",
+    "fancy",
+    "class",
+    "party",
+    "audio",
+    "flash",
+    "speak",
+    "story",
+    "smile",
+    "laugh",
+    "event",
+    "notes",
+    "sound",
+    "charm",
+    "vibes",
+    "table",
+    "toast",
+    "stars"
+  ]
 }

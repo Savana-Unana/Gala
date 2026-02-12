@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Black Tie Gala - Host Control</title>
+    <script>
+      window.FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCcR537OUiw_M9iy29em6kBGfn-z7Tf7-8",
+        authDomain: "gala-99db5.firebaseapp.com",
+        projectId: "gala-99db5",
+        storageBucket: "gala-99db5.firebasestorage.app",
+        messagingSenderId: "75610830408",
+        appId: "1:75610830408:web:111f50ea866528ac5a8a7d",
+        measurementId: "G-7P75W73C4B"
+      };
+      window.EVENT_ID = "black-tie-gala-2026-02-09";
+    </script>
+    <style>
+      :root {
+        --bg-1: #0b0d12;
+        --bg-2: #161b24;
+        --bg-3: #0f141c;
+        --gold-1: #f6d67b;
+        --gold-2: #c9a44d;
+        --ink: #e9eef6;
+        --muted: #a6b3c6;
+        --card: rgba(17, 20, 28, 0.85);
+        --stroke: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+        background:
+          radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
+          radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+        min-height: 100vh;
+      }
+      main { max-width: 940px; margin: 0 auto; padding: 30px 16px 44px; }
+      h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: 0.04em; }
+      .sub { margin: 0 0 18px; color: var(--muted); font-family: "Work Sans", "Segoe UI", Arial, sans-serif; }
+      .card { background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; box-shadow: var(--shadow); padding: 14px; display: grid; gap: 10px; }
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 100px 90px 110px;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid var(--stroke);
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .row h3 { margin: 0; }
+      .state { font-family: "Work Sans", "Segoe UI", Arial, sans-serif; color: var(--muted); font-size: 0.9rem; }
+      button, a.btn {
+        text-decoration: none;
+        border: none;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+        text-align: center;
+      }
+      button.alt { background: rgba(255, 255, 255, 0.1); color: var(--ink); border: 1px solid var(--stroke); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Host Control</h1>
+      <p class="sub">This page controls locks and opens host game controls.</p>
+      <section class="card">
+        <div class="row" data-game="anagrams">
+          <div><h3>Anagrams</h3><div class="state" data-status>Locked</div></div>
+          <button data-unlock>Unlock</button>
+          <button class="alt" data-lock>Lock</button>
+          <a class="btn" href="anagram.html?role=host&id=host-control">Open Host</a>
+        </div>
+        <div class="row" data-game="wordle">
+          <div><h3>Wordle</h3><div class="state" data-status>Locked</div></div>
+          <button data-unlock>Unlock</button>
+          <button class="alt" data-lock>Lock</button>
+          <a class="btn" href="wordle.html?role=host&id=host-control">Open Host</a>
+        </div>
+        <div class="row" data-game="word_ladder">
+          <div><h3>Word Ladder</h3><div class="state" data-status>Locked</div></div>
+          <button data-unlock>Unlock</button>
+          <button class="alt" data-lock>Lock</button>
+          <a class="btn" href="ladder.html?role=host&id=host-control">Open Host</a>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+      sessionStorage.setItem("gala_host_auth", "1");
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+      const app = initializeApp(window.FIREBASE_CONFIG);
+      const db = getFirestore(app);
+      const locksRef = doc(db, "events", window.EVENT_ID, "gameLocks", "state");
+
+      const initLocks = async () => {
+        const snap = await getDoc(locksRef);
+        if (snap.exists()) return;
+        await setDoc(locksRef, {
+          anagrams: false,
+          wordle: false,
+          word_ladder: false,
+          final_game: false,
+          initialized: true,
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      const setLock = async (game, isUnlocked) => {
+        await setDoc(locksRef, { [game]: isUnlocked, updatedAt: serverTimestamp() }, { merge: true });
+      };
+
+      document.querySelectorAll(".row").forEach((row) => {
+        const game = row.dataset.game;
+        row.querySelector("[data-unlock]").addEventListener("click", () => setLock(game, true));
+        row.querySelector("[data-lock]").addEventListener("click", () => setLock(game, false));
+      });
+
+      onSnapshot(locksRef, (snap) => {
+        const d = snap.data() || {};
+        document.querySelectorAll(".row").forEach((row) => {
+          const game = row.dataset.game;
+          row.querySelector("[data-status]").textContent = d[game] ? "Unlocked" : "Locked";
+        });
+      });
+
+      initLocks();
+    </script>
+  </body>
+</html>

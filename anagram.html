@@ -12,7 +12,7 @@
         storageBucket: "gala-99db5.firebasestorage.app",
         messagingSenderId: "75610830408",
         appId: "1:75610830408:web:111f50ea866528ac5a8a7d",
-        measurementId: "G-7P75W73C4B",
+        measurementId: "G-7P75W73C4B"
       };
       window.EVENT_ID = "black-tie-gala-2026-02-09";
     </script>
@@ -32,213 +32,143 @@
         --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         color: var(--ink);
-        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype",
-          "Book Antiqua", "Times New Roman", serif;
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
         background:
           radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
           radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
           linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
         min-height: 100vh;
       }
-
-      main {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 26px 18px 40px;
-      }
-
-      header {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-      }
-
-      header h1 {
-        margin: 0;
-        font-size: clamp(1.8rem, 4vw, 2.6rem);
-        letter-spacing: 0.04em;
-      }
-
-      .timer {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-      }
-
-      .timer-display {
-        font-weight: 700;
-        font-size: 1.1rem;
-      }
-
-      button.action {
-        border: none;
-        border-radius: 10px;
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        cursor: pointer;
-        color: #151515;
-        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
-        box-shadow: 0 10px 20px rgba(201, 164, 77, 0.35);
-      }
-
-      button.muted {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--ink);
-        box-shadow: none;
-        border: 1px solid var(--stroke);
-      }
-
+      main { max-width: 1120px; margin: 0 auto; padding: 24px 16px 40px; }
       .glass {
         background: var(--card);
         border: 1px solid var(--stroke);
-        border-radius: 18px;
+        border-radius: 16px;
         box-shadow: var(--shadow);
-        padding: 16px;
-        backdrop-filter: blur(10px);
+        padding: 14px;
       }
-
-      .bar {
-        display: grid;
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         gap: 10px;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
-
+      .top h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.3rem); }
+      .meta {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        color: var(--muted);
+      }
+      .pill {
+        border: 1px solid var(--stroke);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+      a.back {
+        text-decoration: none;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-weight: 600;
+      }
+      .bar { display: grid; gap: 8px; margin-bottom: 12px; }
+      .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
       .track {
         position: relative;
         height: 16px;
         border-radius: 999px;
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1);
       }
-
-      .meter {
-        position: absolute;
-        inset: 0;
-        width: 0%;
-      }
-
-      .meter.host {
-        background: linear-gradient(120deg, var(--host), #ffb18b);
-      }
-
-      .meter.aud {
-        background: linear-gradient(120deg, var(--aud), #93e7c4);
-        mix-blend-mode: screen;
-      }
-
-      .bar-labels {
-        display: flex;
-        justify-content: space-between;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 0.85rem;
-        color: var(--muted);
-      }
-
+      .meter { position: absolute; inset: 0; width: 0%; }
+      .meter.host { background: linear-gradient(120deg, var(--host), #ffb18b); }
+      .meter.aud { background: linear-gradient(120deg, var(--aud), #93e7c4); mix-blend-mode: screen; }
       .layout {
         display: grid;
-        gap: 16px;
-        grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+        gap: 12px;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
       }
-
-      .list {
-        display: grid;
-        gap: 10px;
-      }
-
+      .list { display: grid; gap: 10px; }
       .item {
         display: grid;
         grid-template-columns: 130px 1fr;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
-        padding: 10px;
-        border-radius: 12px;
         border: 1px solid var(--stroke);
+        border-radius: 10px;
+        padding: 10px;
         background: rgba(255, 255, 255, 0.03);
       }
-
-      .scramble {
-        font-size: 1.05rem;
-        letter-spacing: 0.12em;
-      }
-
       .item input {
         width: 100%;
-        padding: 8px 10px;
-        border-radius: 8px;
         border: 1px solid var(--stroke);
+        border-radius: 8px;
         background: rgba(0, 0, 0, 0.25);
         color: var(--ink);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        padding: 8px 10px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
       }
-
       .item.solved {
-        border-color: rgba(95, 214, 166, 0.5);
+        border-color: rgba(95, 214, 166, 0.45);
+        background: rgba(95, 214, 166, 0.08);
       }
-
-      .item.solved input {
-        border-color: rgba(95, 214, 166, 0.5);
-        background: rgba(95, 214, 166, 0.1);
-      }
-
-      .panel {
-        display: grid;
-        gap: 12px;
-      }
-
-      .panel h2 {
-        margin: 0;
-        font-size: 1.1rem;
-      }
-
-      .panel p {
-        margin: 0;
-        color: var(--muted);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 0.9rem;
-      }
-
-      .counter {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .counter span {
-        min-width: 40px;
+      .side { display: grid; gap: 10px; }
+      .timer {
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-size: 1.8rem;
         text-align: center;
-        font-weight: 700;
       }
-
-      .muted {
+      .status {
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
         color: var(--muted);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
         font-size: 0.9rem;
+        text-align: center;
       }
+      .controls { display: grid; gap: 8px; }
+      .controls button {
+        border: none;
+        border-radius: 10px;
+        padding: 9px 10px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        color: #151515;
+        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
+      }
+      .controls button.alt {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--ink);
+        border: 1px solid var(--stroke);
+      }
+      .hidden { display: none; }
+      @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
     <main>
-      <header>
+      <div class="top">
         <h1>Anagrams</h1>
-        <div class="timer">
-          <span class="timer-display" id="timer-display">02:00</span>
-          <button class="action" id="timer-start">Start</button>
-          <button class="action muted" id="timer-reset">Reset</button>
+        <div class="meta">
+          <span class="pill" id="role-pill">Role</span>
+          <a class="back" id="back-link" href="index.html">Back</a>
         </div>
-      </header>
+      </div>
 
       <section class="bar glass">
         <div class="bar-labels">
@@ -249,23 +179,30 @@
           <div class="meter host" id="host-meter"></div>
           <div class="meter aud" id="aud-meter"></div>
         </div>
+        <div class="bar-labels">
+          <span>Contestant Points: <strong id="host-points">0</strong></span>
+          <span>Audience Points: <strong id="aud-points">0</strong></span>
+        </div>
       </section>
 
       <section class="layout">
-        <div class="list glass" id="anagram-list"></div>
-        <aside class="panel glass">
-          <h2 id="role-label">Audience</h2>
-          <p>Work through your list. Progress updates as you solve.</p>
-          <div class="counter">
-            <button class="action muted" id="you-minus">-</button>
-            <span id="you-count">0</span>
-            <button class="action" id="you-plus">+</button>
-          </div>
-          <p>Other team progress (manual for now).</p>
-          <div class="counter">
-            <button class="action muted" id="other-minus">-</button>
-            <span id="other-count">0</span>
-            <button class="action" id="other-plus">+</button>
+        <section class="glass" id="play-area">
+          <div class="list" id="anagram-list"></div>
+        </section>
+        <aside class="side glass">
+          <div class="timer" id="timer-display">02:00</div>
+          <div class="status" id="status-line">Waiting for host.</div>
+          <div class="status" id="target-line">Audience target: 0</div>
+
+          <div class="controls hidden" id="host-controls">
+            <button id="start-btn">Start Timer</button>
+            <button class="alt" id="end-btn">End Timer</button>
+            <button class="alt" id="reset-btn">Reset Round</button>
+            <button id="add-host-point">+1 Contestants Point</button>
+            <button id="add-aud-point">+1 Audience Point</button>
+            <button class="alt" id="sub-host-point">-1 Contestants Point</button>
+            <button class="alt" id="sub-aud-point">-1 Audience Point</button>
+            <button class="alt" id="reset-stats-btn">Reset Stats</button>
           </div>
         </aside>
       </section>
@@ -277,280 +214,310 @@
         getFirestore,
         doc,
         setDoc,
+        getDoc,
+        updateDoc,
         onSnapshot,
-        serverTimestamp,
+        collection,
+        serverTimestamp
       } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-      const params = new URLSearchParams(window.location.search);
-      const role = params.get("role") === "host" ? "host" : "audience";
-      const clientId = params.get("id") || role;
+      const params = new URLSearchParams(location.search);
+      const requestedRole = ["host", "contestant", "audience"].includes(params.get("role"))
+        ? params.get("role")
+        : "audience";
+      const role = requestedRole === "host" && sessionStorage.getItem("gala_host_auth") !== "1"
+        ? "audience"
+        : requestedRole;
+      const resolveClientId = () => {
+        const fromQuery = params.get("id");
+        if (fromQuery) return fromQuery;
+        const key = `gala-client-id-${role}`;
+        const existing = localStorage.getItem(key);
+        if (existing) return existing;
+        const created = `${role}-${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem(key, created);
+        return created;
+      };
+      const clientId = resolveClientId();
+
       const firebaseConfig = window.FIREBASE_CONFIG || null;
       const eventId = window.EVENT_ID || "black-tie-gala";
-
-      const totalTime = 120;
-      let remaining = totalTime;
-      let timerId = null;
-
+      const rolePill = document.getElementById("role-pill");
+      const backLink = document.getElementById("back-link");
+      const playArea = document.getElementById("play-area");
+      const hostControls = document.getElementById("host-controls");
+      const listEl = document.getElementById("anagram-list");
       const timerDisplay = document.getElementById("timer-display");
-      const startBtn = document.getElementById("timer-start");
-      const resetBtn = document.getElementById("timer-reset");
-
-      const hostMeter = document.getElementById("host-meter");
-      const audMeter = document.getElementById("aud-meter");
+      const statusLine = document.getElementById("status-line");
+      const targetLine = document.getElementById("target-line");
       const hostScore = document.getElementById("host-score");
       const audScore = document.getElementById("aud-score");
+      const hostMeter = document.getElementById("host-meter");
+      const audMeter = document.getElementById("aud-meter");
+      const hostPoints = document.getElementById("host-points");
+      const audPoints = document.getElementById("aud-points");
 
-      const listEl = document.getElementById("anagram-list");
-      const roleLabel = document.getElementById("role-label");
-      const youCountEl = document.getElementById("you-count");
-      const otherCountEl = document.getElementById("other-count");
+      const roleLabel = role === "contestant" ? "Contestant Device" : role === "audience" ? "Audience Device" : "Host Control";
+      rolePill.textContent = roleLabel;
+      backLink.href = role === "host" ? "host.html" : "index.html";
+      if (role === "host") {
+        playArea.classList.add("hidden");
+        hostControls.classList.remove("hidden");
+      }
 
-      const stateKey = `anagram:${role}:${clientId}`;
-      const saved = JSON.parse(localStorage.getItem(stateKey) || "{}");
+      const localKey = `anagram:${role}:${clientId}`;
+      const localState = JSON.parse(localStorage.getItem(localKey) || "{}");
+      let words = [];
+      let solved = localState.solved || {};
+      let answers = localState.answers || {};
+      let gameState = null;
+      let participants = [];
 
-      let anagrams = [];
-      let solved = saved.solved || {};
-      let syncedProgress = { hostProgress: 0, audienceProgress: 0 };
-      let localOtherProgress = saved.otherProgress || 0;
-      let syncEnabled = false;
-      let gameStateRef = null;
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const gameRef = doc(db, "events", eventId, "games", "anagram");
+      const participantsRef = collection(gameRef, "participants");
+      const participantRef = doc(participantsRef, `${role}-${clientId}`);
 
-      roleLabel.textContent = role === "host" ? "Contestants" : "Audience";
-
-      const formatTime = (value) => {
-        const mins = Math.floor(value / 60);
-        const secs = value % 60;
-        return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-      };
-
-      const updateTimer = () => {
-        timerDisplay.textContent = formatTime(remaining);
-      };
-
-      const startTimer = () => {
-        if (timerId) return;
-        timerId = setInterval(() => {
-          remaining = Math.max(0, remaining - 1);
-          updateTimer();
-          if (remaining === 0) {
-            clearInterval(timerId);
-            timerId = null;
-          }
-        }, 1000);
-      };
-
-      const resetTimer = () => {
-        clearInterval(timerId);
-        timerId = null;
-        remaining = totalTime;
-        updateTimer();
-      };
-
-      startBtn.addEventListener("click", startTimer);
-      resetBtn.addEventListener("click", resetTimer);
-      updateTimer();
-
-      const saveState = () => {
-        localStorage.setItem(
-          stateKey,
-          JSON.stringify({
-            solved,
-            answers: saved.answers || {},
-            otherProgress: localOtherProgress,
-          })
-        );
+      const saveLocal = () => {
+        localStorage.setItem(localKey, JSON.stringify({ solved, answers }));
       };
 
       const getMyProgress = () => Object.keys(solved).length;
 
-      const syncMyProgress = async () => {
-        if (!syncEnabled || !gameStateRef) return;
-        const field = role === "host" ? "hostProgress" : "audienceProgress";
-        try {
-          await setDoc(
-            gameStateRef,
-            {
-              [field]: getMyProgress(),
-              updatedAt: serverTimestamp(),
-            },
-            { merge: true }
-          );
-        } catch (err) {
-          console.warn("Anagram sync write failed.", err);
+      const seededRng = (seedText) => {
+        let seed = 2166136261;
+        for (let i = 0; i < seedText.length; i += 1) {
+          seed ^= seedText.charCodeAt(i);
+          seed = Math.imul(seed, 16777619);
         }
+        return () => {
+          seed += 0x6d2b79f5;
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
       };
 
-      const updateOtherProgress = async (delta) => {
-        if (!syncEnabled || !gameStateRef) {
-          localOtherProgress = Math.max(0, localOtherProgress + delta);
-          saveState();
-          renderProgress();
-          return;
+      const pickRandom = (pool, count, seedText) => {
+        const arr = pool.slice();
+        const rnd = seededRng(seedText);
+        for (let i = arr.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(rnd() * (i + 1));
+          const t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
         }
-        const field = role === "host" ? "audienceProgress" : "hostProgress";
-        const current = syncedProgress[field] || 0;
-        const next = Math.max(0, current + delta);
-        try {
-          await setDoc(
-            gameStateRef,
-            {
-              [field]: next,
-              updatedAt: serverTimestamp(),
-            },
-            { merge: true }
-          );
-        } catch (err) {
-          console.warn("Anagram sync write failed.", err);
-        }
+        return arr.slice(0, Math.max(0, Math.min(count, arr.length)));
       };
 
-      const renderProgress = () => {
-        const total = anagrams.length || 1;
-        const youSolved = getMyProgress();
-        const hostValue = syncEnabled
-          ? role === "host"
-            ? Math.max(syncedProgress.hostProgress || 0, youSolved)
-            : syncedProgress.hostProgress || 0
-          : role === "host"
-            ? youSolved
-            : localOtherProgress;
-        const audValue = syncEnabled
-          ? role === "audience"
-            ? Math.max(syncedProgress.audienceProgress || 0, youSolved)
-            : syncedProgress.audienceProgress || 0
-          : role === "audience"
-            ? youSolved
-            : localOtherProgress;
-        hostScore.textContent = hostValue;
-        audScore.textContent = audValue;
-        hostMeter.style.width = `${Math.min(100, (hostValue / total) * 100)}%`;
-        audMeter.style.width = `${Math.min(100, (audValue / total) * 100)}%`;
-        youCountEl.textContent = youSolved;
-        otherCountEl.textContent = role === "host" ? audValue : hostValue;
+      const formatTime = (seconds) => {
+        const s = Math.max(0, seconds);
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
       };
 
-      const updateSolved = (index, isSolved) => {
-        if (isSolved) {
-          solved[index] = true;
-        } else {
-          delete solved[index];
+      const getRemaining = () => {
+        if (!gameState || gameState.timerStatus !== "running") {
+          return Number(gameState?.durationSec || 120);
         }
-        saveState();
-        syncMyProgress();
-        renderProgress();
+        return Math.max(0, Math.ceil((Number(gameState.timerEndsAtMs || 0) - Date.now()) / 1000));
+      };
+
+      const aggregate = () => {
+        const active = participants.filter((p) => Number(p.resetToken || 0) === Number(gameState?.resetToken || 1));
+        const contestants = active.filter((p) => p.role === "contestant");
+        const audience = active.filter((p) => p.role === "audience");
+        return {
+          contestantProgress: contestants.reduce((a, p) => a + Number(p.progress || 0), 0),
+          audienceProgress: audience.reduce((a, p) => a + Number(p.progress || 0), 0)
+        };
+      };
+
+      const render = () => {
+        if (!gameState) return;
+        const myProgress = getMyProgress();
+        const totals = aggregate();
+        const contestantTotalWords = Number(gameState.contestantWordCount || 10);
+        const audienceTarget = Number(gameState.audienceTargetTotal || 40);
+
+        const contestantProgress = role === "contestant"
+          ? Math.max(totals.contestantProgress, myProgress)
+          : totals.contestantProgress;
+        const audienceProgress = role === "audience"
+          ? Math.max(totals.audienceProgress, myProgress)
+          : totals.audienceProgress;
+
+        hostScore.textContent = String(contestantProgress);
+        audScore.textContent = String(audienceProgress);
+        hostMeter.style.width = `${Math.min(100, (contestantProgress / Math.max(1, contestantTotalWords)) * 100)}%`;
+        audMeter.style.width = `${Math.min(100, (audienceProgress / Math.max(1, audienceTarget)) * 100)}%`;
+        hostPoints.textContent = String(gameState.pointsContestants || 0);
+        audPoints.textContent = String(gameState.pointsAudience || 0);
+        timerDisplay.textContent = formatTime(getRemaining());
+        targetLine.textContent = `Audience target total: ${audienceTarget}`;
+
+        let status = "Waiting for host.";
+        if (gameState.timerStatus === "running") status = "Round active.";
+        if (gameState.timerStatus === "ended") status = "Round ended.";
+        if (contestantProgress >= contestantTotalWords) status = "Contestants finished all words.";
+        if (audienceProgress >= audienceTarget) status = "Audience reached target.";
+        statusLine.textContent = status;
+      };
+
+      const syncProgress = async () => {
+        if (role === "host") return;
+        await setDoc(
+          participantRef,
+          {
+            role,
+            progress: getMyProgress(),
+            resetToken: Number(gameState?.resetToken || 1),
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
       };
 
       const renderList = () => {
+        if (role === "host") return;
         listEl.innerHTML = "";
-        anagrams.forEach((entry, index) => {
+        words.forEach((entry, idx) => {
           const row = document.createElement("div");
           row.className = "item";
-          const scramble = document.createElement("div");
-          scramble.className = "scramble";
-          scramble.textContent = entry.scramble.toUpperCase();
+          const left = document.createElement("div");
+          left.textContent = String(entry.scramble || "").toUpperCase();
           const input = document.createElement("input");
           input.type = "text";
-          input.placeholder = "Type answer";
-          input.value = saved.answers?.[index] || "";
-          if (solved[index]) row.classList.add("solved");
+          input.name = `anagram-${idx}`;
+          input.autocomplete = "off";
+          input.value = answers[idx] || "";
+          if (solved[idx]) row.classList.add("solved");
           input.addEventListener("input", () => {
-            const answer = entry.answer.toLowerCase().trim();
-            const guess = input.value.toLowerCase().trim();
-            const isCorrect = guess === answer;
-            row.classList.toggle("solved", isCorrect);
-            updateSolved(index, isCorrect);
-            saved.answers = saved.answers || {};
-            saved.answers[index] = input.value;
-            localStorage.setItem(
-              stateKey,
-              JSON.stringify({ solved, answers: saved.answers })
-            );
+            answers[idx] = input.value;
+            const ok = input.value.trim().toLowerCase() === String(entry.answer || "").trim().toLowerCase();
+            if (ok) solved[idx] = true;
+            else delete solved[idx];
+            row.classList.toggle("solved", ok);
+            saveLocal();
+            syncProgress();
+            render();
           });
-          row.appendChild(scramble);
+          row.appendChild(left);
           row.appendChild(input);
           listEl.appendChild(row);
         });
-        renderProgress();
       };
 
-      document.getElementById("you-plus").addEventListener("click", () => {
-        solved[`manual-${Date.now()}`] = true;
-        saveState();
-        syncMyProgress();
-        renderProgress();
-      });
-
-      document.getElementById("you-minus").addEventListener("click", () => {
-        const keys = Object.keys(solved);
-        if (keys.length) {
-          delete solved[keys[keys.length - 1]];
-          saveState();
-          syncMyProgress();
-          renderProgress();
+      const loadWords = async () => {
+        if (role === "host") return;
+        const res = await fetch("anagrams.json");
+        const data = await res.json();
+        const contestantSet = Array.isArray(data.contestant) ? data.contestant : (data.host || []);
+        const audiencePool = Array.isArray(data.audience_pool) ? data.audience_pool : (data.audience || []);
+        const audienceCount = Number(data.audience_words_per_player || 10);
+        words = role === "contestant"
+          ? contestantSet
+          : pickRandom(audiencePool, audienceCount, `${eventId}:${clientId}:anagram`);
+        renderList();
+        if (role === "contestant") {
+          await setDoc(gameRef, { contestantWordCount: words.length, updatedAt: serverTimestamp() }, { merge: true });
         }
-      });
+      };
 
-      document.getElementById("other-plus").addEventListener("click", () => {
-        updateOtherProgress(1);
-      });
+      const startRound = async () => {
+        const durationSec = Number(gameState?.durationSec || 120);
+        const now = Date.now();
+        await updateDoc(gameRef, {
+          timerStatus: "running",
+          timerStartedAtMs: now,
+          timerEndsAtMs: now + durationSec * 1000,
+          updatedAt: serverTimestamp()
+        });
+      };
 
-      document.getElementById("other-minus").addEventListener("click", () => {
-        updateOtherProgress(-1);
-      });
+      const endRound = async () => {
+        await updateDoc(gameRef, {
+          timerStatus: "ended",
+          timerEndsAtMs: Date.now(),
+          updatedAt: serverTimestamp()
+        });
+      };
 
-      const loadData = async () => {
-        try {
-          const res = await fetch("anagrams.json");
-          const data = await res.json();
-          anagrams = data[role] || [];
-        } catch (err) {
-          anagrams = [];
-        }
-        if (!anagrams.length) {
-          listEl.innerHTML = "<div class=\"muted\">No anagrams loaded yet.</div>";
-        } else {
+      const resetRound = async () => {
+        await updateDoc(gameRef, {
+          timerStatus: "idle",
+          timerStartedAtMs: null,
+          timerEndsAtMs: null,
+          resetToken: Date.now(),
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      const resetStats = async () => {
+        await updateDoc(gameRef, {
+          resetToken: Date.now(),
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      const addPoints = async (field, delta) => {
+        const next = Math.max(0, Number(gameState?.[field] || 0) + delta);
+        await updateDoc(gameRef, { [field]: next, updatedAt: serverTimestamp() });
+      };
+
+      document.getElementById("start-btn")?.addEventListener("click", startRound);
+      document.getElementById("end-btn")?.addEventListener("click", endRound);
+      document.getElementById("reset-btn")?.addEventListener("click", resetRound);
+      document.getElementById("add-host-point")?.addEventListener("click", () => addPoints("pointsContestants", 1));
+      document.getElementById("add-aud-point")?.addEventListener("click", () => addPoints("pointsAudience", 1));
+      document.getElementById("sub-host-point")?.addEventListener("click", () => addPoints("pointsContestants", -1));
+      document.getElementById("sub-aud-point")?.addEventListener("click", () => addPoints("pointsAudience", -1));
+      document.getElementById("reset-stats-btn")?.addEventListener("click", resetStats);
+
+      const initGame = async () => {
+        const snap = await getDoc(gameRef);
+        if (snap.exists()) return;
+        await setDoc(gameRef, {
+          durationSec: 120,
+          timerStatus: "idle",
+          timerStartedAtMs: null,
+          timerEndsAtMs: null,
+          pointsContestants: 0,
+          pointsAudience: 0,
+          audienceTargetTotal: 40,
+          contestantWordCount: 10,
+          resetToken: 1,
+          updatedAt: serverTimestamp()
+        });
+      };
+      await initGame();
+
+      onSnapshot(gameRef, async (snap) => {
+        if (!snap.exists()) return;
+        const prevToken = Number(gameState?.resetToken || 1);
+        gameState = snap.data() || {};
+        if (Number(gameState.resetToken || 1) !== prevToken && role !== "host") {
+          solved = {};
+          answers = {};
+          saveLocal();
           renderList();
+          await syncProgress();
         }
-        syncMyProgress();
-      };
+        render();
+      });
 
-      const initSync = async () => {
-        try {
-          if (!firebaseConfig || !firebaseConfig.apiKey) {
-            throw new Error("Missing Firebase config");
-          }
-          const app = initializeApp(firebaseConfig);
-          const db = getFirestore(app);
-          gameStateRef = doc(db, "events", eventId, "gameState", "anagram");
-          await setDoc(
-            gameStateRef,
-            {
-              hostProgress: 0,
-              audienceProgress: 0,
-              updatedAt: serverTimestamp(),
-            },
-            { merge: true }
-          );
-          onSnapshot(gameStateRef, (snap) => {
-            if (!snap.exists()) return;
-            const data = snap.data() || {};
-            syncedProgress = {
-              hostProgress: Number(data.hostProgress || 0),
-              audienceProgress: Number(data.audienceProgress || 0),
-            };
-            renderProgress();
-          });
-          syncEnabled = true;
-          syncMyProgress();
-        } catch (err) {
-          console.warn("Anagram sync unavailable. Using local progress.", err);
-          syncEnabled = false;
-          renderProgress();
-        }
-      };
+      onSnapshot(participantsRef, (snap) => {
+        participants = snap.docs.map((d) => d.data());
+        render();
+      });
 
-      loadData();
-      initSync();
+      if (role !== "host") {
+        await loadWords();
+        await syncProgress();
+      }
+      setInterval(render, 300);
     </script>
   </body>
 </html>

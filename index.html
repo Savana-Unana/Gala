@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Black Tie Gala - Main Page</title>
+    <title>Black Tie Gala - Audience Hub</title>
     <script>
       window.FIREBASE_CONFIG = {
         apiKey: "AIzaSyCcR537OUiw_M9iy29em6kBGfn-z7Tf7-8",
@@ -12,7 +12,7 @@
         storageBucket: "gala-99db5.firebasestorage.app",
         messagingSenderId: "75610830408",
         appId: "1:75610830408:web:111f50ea866528ac5a8a7d",
-        measurementId: "G-7P75W73C4B",
+        measurementId: "G-7P75W73C4B"
       };
       window.EVENT_ID = "black-tie-gala-2026-02-09";
     </script>
@@ -29,439 +29,119 @@
         --stroke: rgba(255, 255, 255, 0.08);
         --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
         --aud: #5fd6a6;
-        --host: #ff8a5b;
       }
-
-      * {
-        box-sizing: border-box;
-      }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         color: var(--ink);
-        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype",
-          "Book Antiqua", "Times New Roman", serif;
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
         background:
           radial-gradient(1200px 600px at 80% -20%, rgba(246, 214, 123, 0.12), transparent 60%),
           radial-gradient(800px 500px at 10% 10%, rgba(255, 138, 91, 0.12), transparent 60%),
           linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
         min-height: 100vh;
       }
-
-      main {
-        max-width: 1050px;
-        margin: 0 auto;
-        padding: 36px 18px 60px;
-      }
-
-      header {
-        text-align: center;
-        margin-bottom: 22px;
-      }
-
-      header h1 {
-        margin: 0 0 8px;
-        font-size: clamp(2rem, 4vw, 3rem);
-        letter-spacing: 0.04em;
-      }
-
-      header p {
-        margin: 0;
-        color: var(--muted);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 1rem;
-      }
-
-      .tabs {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 18px 0 22px;
-      }
-
-      .tab-btn {
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--ink);
-        padding: 10px 16px;
-        border-radius: 999px;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .tab-btn.active {
-        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
-        color: #151515;
-        border-color: transparent;
-      }
-
-      .panel {
-        display: none;
-      }
-
-      .panel.active {
-        display: block;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
-      }
-
+      main { max-width: 1050px; margin: 0 auto; padding: 34px 16px 50px; }
+      header { text-align: center; margin-bottom: 20px; }
+      h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.04em; }
+      header p { margin: 0; color: var(--muted); font-family: "Work Sans", "Segoe UI", Arial, sans-serif; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
       .card {
         background: var(--card);
         border: 1px solid var(--stroke);
-        border-radius: 18px;
+        border-radius: 16px;
         box-shadow: var(--shadow);
-        padding: 18px;
+        padding: 16px;
         display: grid;
         gap: 10px;
       }
-
-      .card h2 {
-        margin: 0;
-        font-size: 1.3rem;
-      }
-
-      .card p {
-        margin: 0;
-        color: var(--muted);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 0.95rem;
-      }
-
-      .status-pill {
-        align-self: start;
-        justify-self: start;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      .card h2 { margin: 0; font-size: 1.25rem; }
+      .card p { margin: 0; color: var(--muted); font-family: "Work Sans", "Segoe UI", Arial, sans-serif; font-size: 0.95rem; }
+      .status {
+        width: fit-content;
         border: 1px solid var(--stroke);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-size: 0.75rem;
         color: var(--muted);
       }
-
-      .status-pill.unlocked {
-        border-color: rgba(95, 214, 166, 0.4);
-        color: var(--aud);
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
+      .status.open { color: var(--aud); border-color: rgba(95, 214, 166, 0.45); }
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; }
       a.button {
         text-decoration: none;
         color: #151515;
         background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
-        border-radius: 12px;
-        padding: 10px 14px;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
         font-weight: 600;
-        font-size: 0.95rem;
       }
-
-      a.button.locked {
-        pointer-events: none;
-        opacity: 0.45;
-        filter: grayscale(0.4);
-      }
-
-      .muted {
-        color: var(--muted);
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 0.85rem;
-      }
-
-      .controls {
-        display: grid;
-        gap: 12px;
-      }
-
-      .control-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 110px 110px;
-        gap: 10px;
-        align-items: center;
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.03);
-      }
-
-      .control-row h3 {
-        margin: 0;
-        font-size: 1.05rem;
-      }
-
-      .control-row span {
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        font-size: 0.85rem;
-        color: var(--muted);
-      }
-
-      button.action {
-        border: none;
-        border-radius: 12px;
-        padding: 10px 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        font-family: "Work Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        cursor: pointer;
-        color: #151515;
-        background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
-        box-shadow: 0 10px 20px rgba(201, 164, 77, 0.35);
-      }
-
-      button.muted-btn {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--ink);
-        box-shadow: none;
-        border: 1px solid var(--stroke);
-      }
-
-      .footer-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 12px;
-      }
+      a.button.locked { pointer-events: none; opacity: 0.45; filter: grayscale(0.4); }
     </style>
   </head>
   <body>
     <main>
       <header>
-        <h1>Black Tie Gala - Main Page</h1>
-        <p>Contestants and audience play from the same hub.</p>
+        <h1>Black Tie Gala</h1>
+        <p>Audience and contestant game access.</p>
       </header>
 
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="audience">Audience</button>
-        <button class="tab-btn" data-tab="host">Host Controls</button>
-      </div>
-
-      <section class="panel active" id="panel-audience">
-        <div class="grid">
-          <article class="card" data-game="anagrams">
-            <div class="status-pill" data-status>Locked</div>
-            <h2>Anagrams</h2>
-            <p>Race to solve the set of anagrams.</p>
-            <div class="actions">
-              <a class="button" data-link-audience href="anagram.html?role=audience&id=audience-1">Audience Link</a>
-              <a class="button" data-link-host href="anagram.html?role=host&id=host-1">Contestants Link</a>
-            </div>
-          </article>
-
-          <article class="card" data-game="wordle">
-            <div class="status-pill" data-status>Locked</div>
-            <h2>Wordle</h2>
-            <p>Vote on words, track letters found.</p>
-            <div class="actions">
-              <a class="button" data-link-audience href="wordle.html?role=audience&id=audience-1">Audience Link</a>
-              <a class="button" data-link-host href="wordle.html?role=host&id=host-1">Contestants Link</a>
-            </div>
-          </article>
-
-          <article class="card" data-game="word_ladder">
-            <div class="status-pill" data-status>Locked</div>
-            <h2>Word Ladder</h2>
-            <p>Complete the ladder using the hints.</p>
-            <div class="actions">
-              <a class="button" data-link-audience href="ladder.html?role=audience&id=audience-1">Audience Link</a>
-              <a class="button" data-link-host href="ladder.html?role=host&id=host-1">Contestants Link</a>
-            </div>
-          </article>
-
-          <article class="card" data-game="final_game">
-            <div class="status-pill" data-status>Locked</div>
-            <h2>The Final Game</h2>
-            <p>Unlock later.</p>
-            <div class="muted">Not configured yet.</div>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel" id="panel-host">
-        <div class="controls card">
-          <div class="control-row" data-game="anagrams">
-            <div>
-              <h3>Anagrams</h3>
-              <span data-status>Locked</span>
-            </div>
-            <button class="action" data-unlock>Unlock</button>
-            <button class="action muted-btn" data-lock>Lock</button>
+      <section class="grid">
+        <article class="card" data-game="anagrams">
+          <div class="status" data-status>Locked</div>
+          <h2>Anagrams</h2>
+          <p>Solve your randomized set and push team progress.</p>
+          <div class="actions">
+            <a class="button locked" data-link-audience href="anagram.html?role=audience">Audience Link</a>
+            <a class="button locked" data-link-contestant href="anagram.html?role=contestant&id=contestant-1">Contestants Link</a>
           </div>
-          <div class="control-row" data-game="wordle">
-            <div>
-              <h3>Wordle</h3>
-              <span data-status>Locked</span>
-            </div>
-            <button class="action" data-unlock>Unlock</button>
-            <button class="action muted-btn" data-lock>Lock</button>
+        </article>
+        <article class="card" data-game="wordle">
+          <div class="status" data-status>Locked</div>
+          <h2>Wordle</h2>
+          <p>Contestants solve one word. Audience solves randomized words.</p>
+          <div class="actions">
+            <a class="button locked" data-link-audience href="wordle.html?role=audience">Audience Link</a>
+            <a class="button locked" data-link-contestant href="wordle.html?role=contestant&id=contestant-1">Contestants Link</a>
           </div>
-          <div class="control-row" data-game="word_ladder">
-            <div>
-              <h3>Word Ladder</h3>
-              <span data-status>Locked</span>
-            </div>
-            <button class="action" data-unlock>Unlock</button>
-            <button class="action muted-btn" data-lock>Lock</button>
+        </article>
+        <article class="card" data-game="word_ladder">
+          <div class="status" data-status>Locked</div>
+          <h2>Word Ladder</h2>
+          <p>Use hints and complete your randomized ladder steps.</p>
+          <div class="actions">
+            <a class="button locked" data-link-audience href="ladder.html?role=audience">Audience Link</a>
+            <a class="button locked" data-link-contestant href="ladder.html?role=contestant&id=contestant-1">Contestants Link</a>
           </div>
-          <div class="control-row" data-game="final_game">
-            <div>
-              <h3>The Final Game</h3>
-              <span data-status>Locked</span>
-            </div>
-            <button class="action" data-unlock>Unlock</button>
-            <button class="action muted-btn" data-lock>Lock</button>
-          </div>
-          <div class="footer-actions">
-            <button class="action" id="unlock-all">Unlock All</button>
-            <button class="action muted-btn" id="lock-all">Lock All</button>
-          </div>
-        </div>
+        </article>
       </section>
     </main>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-      import {
-        getFirestore,
-        doc,
-        setDoc,
-        onSnapshot,
-        serverTimestamp,
-      } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+      import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-      const firebaseConfig = window.FIREBASE_CONFIG || null;
-      const eventId = window.EVENT_ID || "black-tie-gala";
-      let syncEnabled = false;
-      let locksRef = null;
-      let localLocks = {
-        anagrams: true,
-        wordle: true,
-        word_ladder: true,
-        final_game: false,
-      };
+      const app = initializeApp(window.FIREBASE_CONFIG);
+      const db = getFirestore(app);
+      const locksRef = doc(db, "events", window.EVENT_ID, "gameLocks", "state");
 
-      const setStatus = (game, isUnlocked) => {
+      const setLock = (game, unlocked) => {
         document.querySelectorAll(`[data-game="${game}"] [data-status]`).forEach((el) => {
-          el.textContent = isUnlocked ? "Unlocked" : "Locked";
-          el.classList.toggle("unlocked", isUnlocked);
+          el.textContent = unlocked ? "Unlocked" : "Locked";
+          el.classList.toggle("open", unlocked);
         });
-        document.querySelectorAll(`[data-game="${game}"] [data-link-audience],
-          [data-game="${game}"] [data-link-host]`).forEach((link) => {
-          link.classList.toggle("locked", !isUnlocked);
+        document.querySelectorAll(`[data-game="${game}"] a.button`).forEach((el) => {
+          el.classList.toggle("locked", !unlocked);
         });
       };
 
-      const updateLock = async (game, isUnlocked) => {
-        if (!syncEnabled || !locksRef) {
-          localLocks[game] = isUnlocked;
-          setStatus(game, isUnlocked);
-          return;
-        }
-        await setDoc(
-          locksRef,
-          { [game]: isUnlocked, updatedAt: serverTimestamp() },
-          { merge: true }
-        );
-      };
-
-      const updateAll = async (isUnlocked) => {
-        if (!syncEnabled || !locksRef) {
-          localLocks = {
-            anagrams: isUnlocked,
-            wordle: isUnlocked,
-            word_ladder: isUnlocked,
-            final_game: isUnlocked,
-          };
-          setStatus("anagrams", isUnlocked);
-          setStatus("wordle", isUnlocked);
-          setStatus("word_ladder", isUnlocked);
-          setStatus("final_game", isUnlocked);
-          return;
-        }
-        await setDoc(
-          locksRef,
-          {
-            anagrams: isUnlocked,
-            wordle: isUnlocked,
-            word_ladder: isUnlocked,
-            final_game: isUnlocked,
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
-      };
-
-      document.querySelectorAll(".control-row").forEach((row) => {
-        const game = row.dataset.game;
-        row.querySelector("[data-unlock]").addEventListener("click", () => {
-          updateLock(game, true);
-        });
-        row.querySelector("[data-lock]").addEventListener("click", () => {
-          updateLock(game, false);
-        });
+      onSnapshot(locksRef, (snap) => {
+        const d = snap.data() || {};
+        setLock("anagrams", !!d.anagrams);
+        setLock("wordle", !!d.wordle);
+        setLock("word_ladder", !!d.word_ladder);
       });
-
-      document.getElementById("unlock-all").addEventListener("click", () => {
-        updateAll(true);
-      });
-
-      document.getElementById("lock-all").addEventListener("click", () => {
-        updateAll(false);
-      });
-
-      document.querySelectorAll(".tab-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-          document.querySelectorAll(".panel").forEach((panel) => panel.classList.remove("active"));
-          btn.classList.add("active");
-          const tab = btn.dataset.tab;
-          document.getElementById(`panel-${tab}`).classList.add("active");
-        });
-      });
-
-      const initLockSync = async () => {
-        try {
-          if (!firebaseConfig || !firebaseConfig.apiKey) {
-            throw new Error("Missing Firebase config");
-          }
-          const app = initializeApp(firebaseConfig);
-          const db = getFirestore(app);
-          locksRef = doc(db, "events", eventId, "gameLocks", "state");
-          const defaultLocks = {
-            anagrams: false,
-            wordle: false,
-            word_ladder: false,
-            final_game: false,
-            updatedAt: serverTimestamp(),
-          };
-          await setDoc(locksRef, defaultLocks, { merge: true });
-          onSnapshot(locksRef, (snap) => {
-            if (!snap.exists()) return;
-            const data = snap.data() || {};
-            setStatus("anagrams", !!data.anagrams);
-            setStatus("wordle", !!data.wordle);
-            setStatus("word_ladder", !!data.word_ladder);
-            setStatus("final_game", !!data.final_game);
-          });
-          syncEnabled = true;
-        } catch (err) {
-          console.warn("Firebase lock sync unavailable. Using local fallback.", err);
-          setStatus("anagrams", localLocks.anagrams);
-          setStatus("wordle", localLocks.wordle);
-          setStatus("word_ladder", localLocks.word_ladder);
-          setStatus("final_game", localLocks.final_game);
-        }
-      };
-
-      initLockSync();
     </script>
   </body>
 </html>
