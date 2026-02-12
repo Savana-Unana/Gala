@@ -68,6 +68,26 @@
         text-align: center;
       }
       button.alt { background: rgba(255, 255, 255, 0.1); color: var(--ink); border: 1px solid var(--stroke); }
+      .qr-corner {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        width: 128px;
+        padding: 8px;
+        border-radius: 12px;
+        border: 1px solid var(--stroke);
+        background: rgba(10, 12, 18, 0.9);
+        box-shadow: var(--shadow);
+        z-index: 999;
+      }
+      .qr-corner img { width: 100%; height: auto; display: block; border-radius: 8px; }
+      .qr-corner .qr-label {
+        margin-bottom: 6px;
+        text-align: center;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-size: 0.72rem;
+      }
     </style>
   </head>
   <body>
@@ -101,6 +121,10 @@
         </div>
       </section>
     </main>
+    <div class="qr-corner">
+      <div class="qr-label">Scan This Page</div>
+      <img src="qr.png" alt="QR code" />
+    </div>
     <script type="module">
       sessionStorage.setItem("gala_host_auth", "1");
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
@@ -109,7 +133,6 @@
       const app = initializeApp(window.FIREBASE_CONFIG);
       const db = getFirestore(app);
       const locksRef = doc(db, "events", window.EVENT_ID, "gameLocks", "state");
-
       const initLocks = async () => {
         const snap = await getDoc(locksRef);
         if (snap.exists()) return;

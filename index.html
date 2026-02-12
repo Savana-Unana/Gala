@@ -88,6 +88,26 @@
         font-weight: 600;
       }
       a.button.locked { pointer-events: none; opacity: 0.45; filter: grayscale(0.4); }
+      .qr-corner {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        width: 128px;
+        padding: 8px;
+        border-radius: 12px;
+        border: 1px solid var(--stroke);
+        background: rgba(10, 12, 18, 0.9);
+        box-shadow: var(--shadow);
+        z-index: 999;
+      }
+      .qr-corner img { width: 100%; height: auto; display: block; border-radius: 8px; }
+      .qr-corner .qr-label {
+        margin-bottom: 6px;
+        text-align: center;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-size: 0.72rem;
+      }
     </style>
   </head>
   <body>
@@ -139,6 +159,10 @@
         </article>
       </section>
     </main>
+    <div class="qr-corner">
+      <div class="qr-label">Scan This Page</div>
+      <img src="qr.png" alt="QR code" />
+    </div>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
@@ -155,7 +179,6 @@
       const scoreRef = doc(db, "events", window.EVENT_ID, "scoreboard", "global");
       const scoreHost = document.getElementById("score-host");
       const scoreAud = document.getElementById("score-aud");
-
       document.querySelectorAll("[data-game]").forEach((card) => {
         const audienceLink = card.querySelector("[data-link-audience]");
         const contestantLink = card.querySelector("[data-link-contestant]");

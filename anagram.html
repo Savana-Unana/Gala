@@ -158,6 +158,26 @@
       }
       .hidden { display: none; }
       @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+      .qr-corner {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        width: 128px;
+        padding: 8px;
+        border-radius: 12px;
+        border: 1px solid var(--stroke);
+        background: rgba(10, 12, 18, 0.9);
+        box-shadow: var(--shadow);
+        z-index: 999;
+      }
+      .qr-corner img { width: 100%; height: auto; display: block; border-radius: 8px; }
+      .qr-corner .qr-label {
+        margin-bottom: 6px;
+        text-align: center;
+        color: var(--muted);
+        font-family: "Work Sans", "Segoe UI", Arial, sans-serif;
+        font-size: 0.72rem;
+      }
     </style>
   </head>
   <body>
@@ -207,6 +227,10 @@
         </aside>
       </section>
     </main>
+    <div class="qr-corner">
+      <div class="qr-label">Scan This Page</div>
+      <img src="qr.png" alt="QR code" />
+    </div>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
@@ -259,7 +283,6 @@
       const audMeter = document.getElementById("aud-meter");
       const hostPoints = document.getElementById("host-points");
       const audPoints = document.getElementById("aud-points");
-
       const roleLabel = role === "contestant" ? "Contestant Device" : role === "audience" ? "Audience Device" : "Host Control";
       rolePill.textContent = roleLabel;
       backLink.href = role === "host"
